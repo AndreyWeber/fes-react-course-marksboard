@@ -1,0 +1,12 @@
+**/node_modules/
+**/bower_components/
+**/client_build/
+**/libs
+**/bin
+**/.idea
+**/*.swp
+**/*.log
+**/tmp
+**/.DS_Store
+**/npm-debug.log
+**/build
