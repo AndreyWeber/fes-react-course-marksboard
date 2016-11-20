@@ -1,5 +1,5 @@
 // external libs
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 // my libs (utils, actions)
 
@@ -14,7 +14,7 @@ import React, {Component} from 'react';
 export default class LoginPage extends Component {
     render () {
         return (
-            <div></div>
+            <h1>Login page</h1>
         );
     }
 }

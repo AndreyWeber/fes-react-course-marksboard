@@ -5,7 +5,7 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 const isDevelopment = NODE_ENV === 'development';
 
 module.exports = {
-    entry: './src/main.js',
+    entry: './src/main.jsx',
     output: {
         path: path.resolve(__dirname, 'public', 'build'),
         publicPath: '/build/',
@@ -18,16 +18,16 @@ module.exports = {
             {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
-                use: ['react-hot-loader', 'babel-loader']
+                use: ['babel-loader']
             },
             {
                 test: /\.less$/,
                 exclude: /node_modules/,
                 use: [
-                    'style',
-                    'css?modules&importLoaders=1&localIdentName=__[name]__[local]___[hash:base64:5]',
+                    'style-loader',
+                    'css-loader?modules&importLoaders=1&localIdentName=__[name]__[local]___[hash:base64:5]',
                     {
-                        loader: 'postcss',
+                        loader: 'postcss-loader',
                         options: {
                             plugins() {
                                 return [
