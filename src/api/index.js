@@ -1,4 +1,5 @@
 import { fromJS, Map } from 'immutable';
+import camelCase from 'camel-case';
 
 import config from './api.config.js';
 
@@ -48,7 +49,7 @@ export function getStudents() {
 
                     const students = data.map(student =>
                         header.reduce((result, item, idx) =>
-                                result.set(item, student.get(idx, '')),
+                                result.set(camelCase(item), student.get(idx, '')),
                             new Map()
                         )
                     );
@@ -61,5 +62,28 @@ export function getStudents() {
         };
 
         gapi.load('client', callApi);
+    });
+}
+
+export function getStudent(login) {
+    return new Promise((resolve, reject) => {
+        if (!login) {
+            reject('Please provide your login');
+        }
+
+        getStudents().then(
+            result => {
+                const user = result.find(student =>
+                    student.get('login').trim() === login.trim()
+                );
+
+                if (user) {
+                    resolve(user);
+                } else {
+                    reject(`User with "${login}" login not found`);
+                }
+            },
+            error => reject(error)
+        );
     });
 }

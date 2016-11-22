@@ -1,20 +1,67 @@
-// external libs
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { replace } from 'react-router-redux';
 
-// my libs (utils, actions)
+import { userLogin } from '../actions';
 
-// external components
+import Login from '../components/Login.jsx';
 
-// my components
+class LoginPage extends Component {
+    static propTypes = {
+        onLogin: PropTypes.func.isRequired,
+        onReplace: PropTypes.func.isRequired
+    };
 
-// styles
+    constructor(props) {
+        super(props);
 
-// constants
+        this.state = {
+            login: ''
+        };
 
-export default class LoginPage extends Component {
-    render () {
+        this.handleChange = this.handleChange.bind(this);
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    handleChange(event) {
+        this.setState({
+            login: event.target.value
+        });
+    }
+
+    handleClick(event) {
+        const {
+            onLogin,
+            onReplace
+        } = this.props;
+
+        onLogin(this.state.login);
+
+        this.setState({
+            login: ''
+        });
+
+        onReplace({
+            pathname: '/test'
+        });
+
+        event.preventDefault();
+    }
+
+    render() {
         return (
-            <h1>Login page</h1>
+            <div>
+                <Login
+                    value={this.state.login}
+                    onChange={this.handleChange}
+                    onClick={this.handleClick}
+                />
+            </div>
         );
     }
 }
+
+export default connect(undefined, {
+    onLogin: login => userLogin(login),
+    onReplace: location => replace(location)
+})(LoginPage);
