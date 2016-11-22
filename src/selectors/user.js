@@ -1,10 +1,15 @@
 import { createSelector } from 'reselect';
 
-export const getCurrentUser = state => {
+export const getUser = state => {
     return state.get('user');
 };
 
-export const isCurrentUserLoggedIn = createSelector(
-    getCurrentUser,
+export const isUserLoggedIn = createSelector(
+    getUser,
     user => user.get('loggedIn')
+);
+
+export const isUserLoggingIn = createSelector(
+    getUser,
+    user => user.get('loggingIn')
 );

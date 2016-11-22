@@ -1,6 +1,6 @@
 import { fromJS } from 'immutable';
 
-import { getStudent } from '../api';
+import { getStudentByLogin } from '../api';
 
 export const USER_LOGIN_REQUEST = 'USER_LOGIN_REQUEST';
 export const USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS';
@@ -24,7 +24,9 @@ export const userLoginFailure = (login, error) => ({
 export const userLogin = login => dispatch => {
     dispatch(userLoginRequest(login));
 
-    getStudent(login)
+    // TODO: Add local storage save/load functionality
+
+    getStudentByLogin(login)
         .then(userData => dispatch(userLoginSuccess(userData)))
         .catch(error => dispatch(userLoginFailure(login, error)));
 };

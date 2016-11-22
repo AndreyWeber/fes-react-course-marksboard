@@ -22,6 +22,7 @@ export default (
         <Route component={LoginPage} path="login" />
         <Route component={requireAuthentication(LoggedInLayout)}>
             <Route component={TestPage} path="test" />
+            <Route component={TestPage1} path="test1" />
         </Route>
         <Route component={NotFound} path="*" />
     </Route>

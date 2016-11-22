@@ -3,13 +3,16 @@ import { connect } from 'react-redux';
 import { replace } from 'react-router-redux';
 
 import { userLogin } from '../actions';
+import { isUserLoggingIn } from '../selectors/user';
 
 import Login from '../components/Login.jsx';
 
-class LoginPage extends Component {
+@connect(mapStateToProps, { replace, userLogin })
+export default class LoginPage extends Component {
     static propTypes = {
-        onLogin: PropTypes.func.isRequired,
-        onReplace: PropTypes.func.isRequired
+        loggingIn: PropTypes.bool.isRequired,
+        replace: PropTypes.func.isRequired,
+        userLogin: PropTypes.func.isRequired
     };
 
     constructor(props) {
@@ -23,6 +26,19 @@ class LoginPage extends Component {
         this.handleClick = this.handleClick.bind(this);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.loggingIn) {
+            return;
+        }
+
+        // TODO: Add error handling
+        // TODO: Add router state handling
+
+        this.props.replace({
+            pathname: '/test'
+        });
+    }
+
     handleChange(event) {
         this.setState({
             login: event.target.value
@@ -30,20 +46,7 @@ class LoginPage extends Component {
     }
 
     handleClick(event) {
-        const {
-            onLogin,
-            onReplace
-        } = this.props;
-
-        onLogin(this.state.login);
-
-        this.setState({
-            login: ''
-        });
-
-        onReplace({
-            pathname: '/test'
-        });
+        this.props.userLogin(this.state.login);
 
         event.preventDefault();
     }
@@ -61,7 +64,8 @@ class LoginPage extends Component {
     }
 }
 
-export default connect(undefined, {
-    onLogin: login => userLogin(login),
-    onReplace: location => replace(location)
-})(LoginPage);
+function mapStateToProps(state) {
+    return {
+        loggingIn: isUserLoggingIn(state)
+    };
+}

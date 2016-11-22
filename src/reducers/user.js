@@ -9,7 +9,7 @@ import {
 const userInitialState = fromJS({
     userData: {},
     loggedIn: false,
-    isFetching: false,
+    loggingIn: false,
     error: null
 });
 
@@ -17,14 +17,14 @@ export default function user(state = userInitialState, action) {
     switch (action.type) {
         case USER_LOGIN_REQUEST: {
             return state
-                .set('isFetching', true);
+                .set('loggingIn', true);
         }
 
         case USER_LOGIN_SUCCESS: {
             return state
                 .set('userData', action.userData)
                 .set('loggedIn', true)
-                .set('isFetching', false)
+                .set('loggingIn', false)
                 .set('error', null);
         }
 
@@ -32,7 +32,7 @@ export default function user(state = userInitialState, action) {
             return state
                 .set('userData', action.userData)
                 .set('loggedIn', false)
-                .set('isFetching', false)
+                .set('loggingIn', false)
                 .set('error', action.error);
         }
 

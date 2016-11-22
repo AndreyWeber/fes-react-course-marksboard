@@ -2,16 +2,19 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { replace } from 'react-router-redux';
 
-import { isCurrentUserLoggedIn } from '../selectors/user';
+import { isUserLoggedIn } from '../selectors/user';
 import { getPathname, getQuery } from '../selectors/routing';
 
+import NotAuthorized from '../components/NotAuthorized.jsx';
+
 export default function requireAuthentication(Component) {
+    @connect(mapStateToProps, { replace })
     class AuthenticatedComponent extends React.Component {
         static propTypes = {
-            currentPathname: PropTypes.string.isRequired,
-            currentQuery: PropTypes.shape({}).isRequired,
-            isAuthenticated: PropTypes.bool.isRequired,
-            onReplace: PropTypes.func.isRequired
+            authenticated: PropTypes.bool.isRequired,
+            pathname: PropTypes.string.isRequired,
+            query: PropTypes.shape({}).isRequired,
+            replace: PropTypes.func.isRequired
         };
 
         componentWillMount() {
@@ -24,18 +27,18 @@ export default function requireAuthentication(Component) {
 
         checkAuth() {
             const {
-                currentPathname,
-                currentQuery,
-                isAuthenticated,
-                onReplace
+                authenticated,
+                pathname,
+                query,
+                replace
             } = this.props;
 
-            if (!isAuthenticated) {
-                onReplace({
+            if (!authenticated) {
+                replace({
                     pathname: '/login',
                     state: {
-                        nextPathname: currentPathname,
-                        nextQuery: currentQuery
+                        nextPathname: pathname,
+                        nextQuery: query
                     }
                 });
             }
@@ -45,24 +48,22 @@ export default function requireAuthentication(Component) {
             return (
                 <div>
                     {
-                        this.props.isAuthenticated
+                        this.props.authenticated
                             ? <Component {...this.props} />
-                            : null
+                            : <NotAuthorized />
                     }
                 </div>
             );
         }
     }
 
-    return connect(mapStateToProps, {
-        onReplace: location => replace(location)
-    })(AuthenticatedComponent);
-}
+    function mapStateToProps(state) {
+        return {
+            authenticated: isUserLoggedIn(state),
+            pathname: getPathname(state),
+            query: getQuery(state)
+        };
+    }
 
-function mapStateToProps(state) {
-    return {
-        isAuthenticated: isCurrentUserLoggedIn(state),
-        currentPathname: getPathname(state),
-        currentQuery: getQuery(state)
-    };
+    return AuthenticatedComponent;
 }

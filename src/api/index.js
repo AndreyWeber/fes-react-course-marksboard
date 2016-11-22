@@ -65,7 +65,7 @@ export function getStudents() {
     });
 }
 
-export function getStudent(login) {
+export function getStudentByLogin(login) {
     return new Promise((resolve, reject) => {
         if (!login) {
             reject('Please provide your login');

@@ -1,17 +1,8 @@
-// external libs
 import React, { PropTypes } from 'react';
 
-// my libs (utils, actions)
-
-// external components
 import { Panel, PanelHeader, InlineForm } from 'rebass';
 
-// my components
-
-// styles
 import styles from './Login.less';
-
-// constants
 
 const Login = props => (
     <div className={styles.root}>
