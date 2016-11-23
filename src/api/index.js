@@ -4,6 +4,17 @@ import camelCase from 'camel-case';
 import config from './api.config.js';
 
 /**
+* Constants
+**/
+const REVIEWS_TAB = 'Reviews';
+const DIVISION_TAB = 'Division';
+const POINTS_TAB = 'Points';
+const STUDENTS_TAB = 'Students';
+const MENTORS_TAB = 'Mentors';
+const LESSONS_TAB = 'Lessons';
+const TASKS_TAB = 'Tasks';
+
+/**
 * Helper methods
 **/
 function initGapi() {
@@ -22,6 +33,31 @@ const get = params => initGapi().then(() =>
 const batchGet = params => initGapi().then(() =>
     gapi.client.sheets.spreadsheets.values.batchGet(params));
 
+function toListOfMaps(rows) {
+    if (!rows) {
+        throw new Error('Provided tab rows list is empty');
+    }
+
+    const {
+        result: {
+            valueRanges: [
+                { values: [rawHeader] },
+                { values: rawData }
+            ]
+        }
+    } = rows;
+
+    const header = fromJS(rawHeader);
+    const data = fromJS(rawData);
+
+    return data.map(entry =>
+        header.reduce((result, item, idx) =>
+            result.set(camelCase(item), entry.get(idx, '')),
+            new Map()
+        )
+    );
+}
+
 /**
 * API methods
 **/
@@ -31,30 +67,15 @@ export function getStudents() {
             batchGet({
                 spreadsheetId: config.spreadsheetId,
                 majorDimension: 'ROWS',
-                ranges: ['Students!1:1', 'Students!2:1000'],
+                ranges: [`${STUDENTS_TAB}!1:1`, `${STUDENTS_TAB}!2:1000`],
             }).then(
                 // Process correct response
                 response => {
-                    const {
-                        result: {
-                            valueRanges: [
-                                { values: [rawHeader] },
-                                { values: rawData }
-                            ]
-                        }
-                    } = response;
-
-                    const header = fromJS(rawHeader);
-                    const data = fromJS(rawData);
-
-                    const students = data.map(student =>
-                        header.reduce((result, item, idx) =>
-                                result.set(camelCase(item), student.get(idx, '')),
-                            new Map()
-                        )
-                    );
-
-                    resolve(students);
+                    try {
+                        resolve(toListOfMaps(response));
+                    } catch(error) {
+                        reject(error);
+                    }
                 },
                 // Process error response
                 response => reject(response.result.error.message)
@@ -65,25 +86,71 @@ export function getStudents() {
     });
 }
 
-export function getStudentByLogin(login) {
+export function getStudent(id, idName) {
     return new Promise((resolve, reject) => {
-        if (!login) {
-            reject('Please provide your login');
+        if (!id) {
+            reject(`Please provide your ${idName}`);
         }
 
-        getStudents().then(
-            result => {
+        getStudents()
+            .then(result => {
                 const user = result.find(student =>
-                    student.get('login').trim() === login.trim()
+                    student.get(idName).trim() === id.trim()
                 );
 
                 if (user) {
                     resolve(user);
                 } else {
-                    reject(`User with "${login}" login not found`);
+                    reject(`User with "${id}" ${idName} not found`);
                 }
-            },
-            error => reject(error)
-        );
+            })
+            .catch(error => reject(error));
+    });
+}
+
+export function getReviews() {
+    return new Promise((resolve, reject) => {
+        const callApi = () => {
+            batchGet({
+                spreadsheetId: config.spreadsheetId,
+                majorDimension: 'ROWS',
+                ranges: [`${REVIEWS_TAB}!1:1`, `${REVIEWS_TAB}!2:1000`],
+            }).then(
+                // Process correct response
+                response => {
+                    try {
+                        resolve(toListOfMaps(response));
+                    } catch(error) {
+                        reject(error);
+                    }
+                },
+                // Process error response
+                response => reject(response.result.error.message)
+            );
+        };
+
+        gapi.load('client', callApi);
+    });
+}
+
+export function getStudentTotalScore(login) {
+    return new Promise((resolve, reject) => {
+        if (!login) {
+            reject("Empty login value provided. Can't count student total score.");
+        }
+
+        getReviews()
+            .then(result => resolve(
+                result
+                    .filter(review =>
+                        review.get('student').trim() === login.trim()
+                    )
+                    .reduce((score, item) =>
+                        score + parseFloat(item.get('points', 0)),
+                        0
+                    )
+                )
+            )
+            .catch(error => reject(error));
     });
 }

@@ -1,15 +1,18 @@
 import { createSelector } from 'reselect';
 
-export const getUser = state => {
-    return state.get('user');
-};
+export const getUser = state => state.get('user');
 
-export const isUserLoggedIn = createSelector(
+export const getDisplayName = createSelector(
     getUser,
-    user => user.get('loggedIn')
+    user => user.get('name', 'Anonymous')
 );
 
-export const isUserLoggingIn = createSelector(
+export const getIsFetching = createSelector(
     getUser,
-    user => user.get('loggingIn')
+    user => user.get('isFetching')
+);
+
+export const getTotalScore = createSelector(
+    getUser,
+    user => user.get('totalScore')
 );

@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { replace } from 'react-router-redux';
 
-import { isUserLoggedIn } from '../selectors/user';
+import { getLoggedIn } from '../selectors/login';
 import { getPathname, getQuery } from '../selectors/routing';
 
 import NotAuthorized from '../components/NotAuthorized.jsx';
@@ -59,7 +59,7 @@ export default function requireAuthentication(Component) {
 
     function mapStateToProps(state) {
         return {
-            authenticated: isUserLoggedIn(state),
+            authenticated: getLoggedIn(state),
             pathname: getPathname(state),
             query: getQuery(state)
         };

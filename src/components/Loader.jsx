@@ -1,11 +1,30 @@
 import React, { PropTypes } from 'react';
+import { Heading, Overlay } from 'rebass';
+
+import styles from './Loader.less';
 
 const Loader = props => {
+    const overlay = (
+        <Overlay
+            box
+            dark
+            fullWidth
+            open
+        >
+            <Heading
+                level={2}
+                style={{textAlign: 'center'}}
+            >
+                Loading...
+            </Heading>
+        </Overlay>
+    );
+
     return (
-        <div>
+        <div className={styles.root}>
             {
                 props.loading
-                    ? 'Loading...'
+                    ? overlay
                     : props.children
             }
         </div>

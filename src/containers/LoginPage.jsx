@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { replace } from 'react-router-redux';
 
 import { userLogin } from '../actions';
-import { isUserLoggingIn } from '../selectors/user';
+import { getLoggingIn } from '../selectors/login';
 
 import Login from '../components/Login.jsx';
 
@@ -15,17 +15,6 @@ export default class LoginPage extends Component {
         userLogin: PropTypes.func.isRequired
     };
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            login: ''
-        };
-
-        this.handleChange = this.handleChange.bind(this);
-        this.handleClick = this.handleClick.bind(this);
-    }
-
     componentWillReceiveProps(nextProps) {
         if (nextProps.loggingIn) {
             return;
@@ -35,37 +24,21 @@ export default class LoginPage extends Component {
         // TODO: Add router state handling
 
         this.props.replace({
-            pathname: '/test'
+            pathname: '/totalscore'
         });
     }
 
-    handleChange(event) {
-        this.setState({
-            login: event.target.value
-        });
-    }
-
-    handleClick(event) {
-        this.props.userLogin(this.state.login);
-
-        event.preventDefault();
-    }
+    handleClick = login => this.props.userLogin(login);
 
     render() {
         return (
-            <div>
-                <Login
-                    value={this.state.login}
-                    onChange={this.handleChange}
-                    onClick={this.handleClick}
-                />
-            </div>
+            <Login onClick={this.handleClick} />
         );
     }
 }
 
 function mapStateToProps(state) {
     return {
-        loggingIn: isUserLoggingIn(state)
+        loggingIn: getLoggingIn(state)
     };
 }
