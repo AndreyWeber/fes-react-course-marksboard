@@ -28,7 +28,7 @@ export default class LoginPage extends Component {
         });
     }
 
-    handleClick = login => this.props.userLogin(login);
+    handleClick = key => this.props.userLogin(key);
 
     render() {
         return (

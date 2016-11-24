@@ -9,6 +9,7 @@ import {
 } from '../actions';
 
 const loginInitialState = fromJS({
+    key: null,
     loggedIn: false,
     loggingIn: false,
     error: null
@@ -24,7 +25,9 @@ export default function login(state = loginInitialState, action) {
         case USER_LOGIN_SUCCESS: {
             user(state, action);
 
+            const key = action.userData.get('key');
             return state
+                .set('key', key)
                 .set('loggedIn', true)
                 .set('loggingIn', false)
                 .set('error', null);
@@ -34,6 +37,7 @@ export default function login(state = loginInitialState, action) {
             user(state, action);
 
             return state
+                .set('key', action.key)
                 .set('loggedIn', false)
                 .set('loggingIn', false)
                 .set('error', action.error);

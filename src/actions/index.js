@@ -20,20 +20,20 @@ export const userLoginSuccess = userData => ({
     userData
 });
 
-export const userLoginFailure = (login, error) => ({
+export const userLoginFailure = (key, error) => ({
     type: USER_LOGIN_FAILURE,
-    login,
+    key,
     error
 });
 
-export const userLogin = login => dispatch => {
+export const userLogin = key => dispatch => {
     dispatch(userLoginRequest());
 
     // TODO: Add local storage save/load functionality
 
-    getStudent(login, 'login')
+    getStudent(key, 'key')
         .then(userData => dispatch(userLoginSuccess(userData)))
-        .catch(error => dispatch(userLoginFailure(login, error)));
+        .catch(error => dispatch(userLoginFailure(key, error)));
 };
 
 export const totalScoreRequest = () => ({
