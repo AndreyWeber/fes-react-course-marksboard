@@ -1,4 +1,4 @@
-import { fromJS } from 'immutable';
+import { fromJS, Map } from 'immutable';
 
 import {
     USER_LOGIN_REQUEST,
@@ -7,7 +7,7 @@ import {
 } from '../actions';
 
 const loginInitialState = fromJS({
-    key: null,
+    user: {},
     loggedIn: false,
     loggingIn: false,
     error: null
@@ -21,9 +21,8 @@ export default function login(state = loginInitialState, action) {
         }
 
         case USER_LOGIN_SUCCESS: {
-            const key = action.userData.get('key');
             return state
-                .set('key', key)
+                .set('user', action.user)
                 .set('loggedIn', true)
                 .set('loggingIn', false)
                 .set('error', null);
@@ -31,7 +30,7 @@ export default function login(state = loginInitialState, action) {
 
         case USER_LOGIN_FAILURE: {
             return state
-                .set('key', action.key)
+                .setIn(['user', 'key'], action.key)
                 .set('loggedIn', false)
                 .set('loggingIn', false)
                 .set('error', action.error);

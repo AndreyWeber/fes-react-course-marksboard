@@ -6,6 +6,7 @@ import { userLogin } from '../actions';
 import { isLoggingIn } from '../selectors/login';
 
 import Login from '../components/Login.jsx';
+import Loader from '../components/Loader.jsx';
 
 @connect(mapStateToProps, { replace, userLogin })
 export default class LoginPage extends Component {
@@ -30,7 +31,9 @@ export default class LoginPage extends Component {
 
     render() {
         return (
-            <Login onLogin={this.props.userLogin} />
+            <Loader loading={this.props.isLoggingIn}>
+                <Login onLogin={this.props.userLogin} />
+            </Loader>
         );
     }
 }

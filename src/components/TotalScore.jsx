@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Block, Heading } from 'rebass';
 
-import { randomGreeting } from '../utils';
+import { randomGreeting } from '../utils/randomGreeting';
 
 import styles from './TotalScore.less';
 

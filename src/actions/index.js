@@ -1,7 +1,13 @@
 import {
+    getFromStorage,
+    putInStorage
+} from '../utils/localStorage';
+import {
     getReviews,
     getStudent,
 } from '../api';
+
+import { USER_KEY_STORAGE_NODE_NAME } from '../utils/localStorage';
 
 export const USER_LOGIN_REQUEST = 'USER_LOGIN_REQUEST';
 export const USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS';
@@ -16,13 +22,18 @@ export const userLogin = key => dispatch => {
         type: USER_LOGIN_REQUEST
     });
 
-    // TODO: Add local storage save/load functionality
+    putInStorage(null, USER_KEY_STORAGE_NODE_NAME);
 
     getStudent(key, 'key')
-        .then(userData => dispatch({
-            type: USER_LOGIN_SUCCESS,
-            userData
-        }))
+        .then(user => {
+            putInStorage(user.get('key'),
+                USER_KEY_STORAGE_NODE_NAME);
+
+            dispatch({
+                type: USER_LOGIN_SUCCESS,
+                user
+            });
+        })
         .catch(error => dispatch({
             type: USER_LOGIN_FAILURE,
             key,

@@ -24,6 +24,7 @@ export default function reviews(state = reviewsInitialState, action) {
         }
 
         case FETCH_REVIEWS_SUCCESS: {
+            console.log('FETCH_REVIEWS_SUCCESS');
             return state
                 .merge({
                     entities: action.reviews,

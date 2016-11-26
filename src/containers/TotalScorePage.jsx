@@ -2,10 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { getReviews } from '../selectors/reviews';
-import { getUser } from '../selectors/user';
+import { getUser } from '../selectors/login';
 
 import TotalScore from '../components/TotalScore.jsx';
-import Loader from '../components/Loader.jsx';
 
 @connect(mapStateToProps, undefined)
 export default class TotalScorePage extends Component {
@@ -14,7 +13,6 @@ export default class TotalScorePage extends Component {
             filter: PropTypes.func
         }).isRequired,
         user: PropTypes.shape({
-            isFetching: PropTypes.bool.isRequired,
             login: PropTypes.string.isRequired,
             name: PropTypes.string.isRequired,
         }),
@@ -37,18 +35,11 @@ export default class TotalScorePage extends Component {
     }
 
     render () {
-        const {
-            name,
-            isFetching
-        } = this.props.user;
-
         return (
-            <Loader loading={isFetching}>
-                <TotalScore
-                    name={name}
-                    totalScore={this.getTotalScore()}
-                />
-            </Loader>
+            <TotalScore
+                name={this.props.user.name}
+                totalScore={this.getTotalScore()}
+            />
         );
     }
 }

@@ -11,3 +11,8 @@ export const isLoggingIn = createSelector(
     getLogin,
     login => login.get('loggingIn')
 );
+
+export const getUser = createSelector(
+    getLogin,
+    login => login.get('user')
+);
