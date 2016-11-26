@@ -11,8 +11,3 @@ export const getIsFetching = createSelector(
     getUser,
     user => user.get('isFetching')
 );
-
-export const getTotalScore = createSelector(
-    getUser,
-    user => user.get('totalScore')
-);

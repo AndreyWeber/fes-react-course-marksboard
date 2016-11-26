@@ -9,14 +9,15 @@ import LoginPage from './containers/LoginPage.jsx';
 import TotalScorePage from './containers/TotalScorePage.jsx';
 import NotFound from './components/NotFound.jsx';
 
-
+/* eslint-disable react/jsx-sort-props */
 export default (
     <Route component={App}>
         <Redirect from="/" to="login" />
-        <Route component={LoginPage} path="login" />
+        <Route path="login" component={LoginPage} />
         <Route component={requireAuthentication(LoggedInLayout)}>
-            <Route component={TotalScorePage} path="totalscore" />
+            <Route path="totalscore" component={TotalScorePage} />
         </Route>
-        <Route component={NotFound} path="*" />
+        <Route path="*" component={NotFound} />
     </Route>
 );
+/* eslint-enable react/jsx-sort-props */

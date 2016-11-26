@@ -3,20 +3,20 @@ import { connect } from 'react-redux';
 import { replace } from 'react-router-redux';
 
 import { userLogin } from '../actions';
-import { getLoggingIn } from '../selectors/login';
+import { isLoggingIn } from '../selectors/login';
 
 import Login from '../components/Login.jsx';
 
 @connect(mapStateToProps, { replace, userLogin })
 export default class LoginPage extends Component {
     static propTypes = {
-        loggingIn: PropTypes.bool.isRequired,
+        isLoggingIn: PropTypes.bool.isRequired,
         replace: PropTypes.func.isRequired,
         userLogin: PropTypes.func.isRequired
     };
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.loggingIn) {
+        if (nextProps.isLoggingIn) {
             return;
         }
 
@@ -28,17 +28,15 @@ export default class LoginPage extends Component {
         });
     }
 
-    handleClick = key => this.props.userLogin(key);
-
     render() {
         return (
-            <Login onClick={this.handleClick} />
+            <Login onLogin={this.props.userLogin} />
         );
     }
 }
 
 function mapStateToProps(state) {
     return {
-        loggingIn: getLoggingIn(state)
+        isLoggingIn: isLoggingIn(state)
     };
 }

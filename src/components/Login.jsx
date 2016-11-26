@@ -6,7 +6,7 @@ import styles from './Login.less';
 
 export default class Login extends Component {
     static propTypes = {
-        onClick: PropTypes.func.isRequired
+        onLogin: PropTypes.func.isRequired
     };
 
     constructor(props) {
@@ -27,7 +27,7 @@ export default class Login extends Component {
     }
 
     handleClick(event) {
-        this.props.onClick(this.state.login);
+        this.props.onLogin(this.state.login);
 
         event.preventDefault();
     }

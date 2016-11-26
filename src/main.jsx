@@ -7,6 +7,8 @@ import { Provider } from 'react-redux';
 import routes from './routes.jsx';
 import configureStore from './store';
 
+import { fetchReviews } from './actions';
+
 import 'normalize.css';
 import './assets/main.less';
 
@@ -18,11 +20,17 @@ const history = syncHistoryWithStore(browserHistory, store, {
     }
 });
 
-ReactDOM.render(
-    <Provider store={store}>
-        <Router history={history}>
-            {routes}
-        </Router>
-    </Provider>,
-    document.getElementById('root')
-);
+function renderApp() {
+    ReactDOM.render(
+        <Provider store={store}>
+            <Router history={history}>
+                {routes}
+            </Router>
+        </Provider>,
+        document.getElementById('root')
+    );
+}
+
+fetchReviews()(store.dispatch);
+
+renderApp();

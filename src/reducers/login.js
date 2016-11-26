@@ -1,7 +1,5 @@
 import { fromJS } from 'immutable';
 
-import user from './user';
-
 import {
     USER_LOGIN_REQUEST,
     USER_LOGIN_SUCCESS,
@@ -23,8 +21,6 @@ export default function login(state = loginInitialState, action) {
         }
 
         case USER_LOGIN_SUCCESS: {
-            user(state, action);
-
             const key = action.userData.get('key');
             return state
                 .set('key', key)
@@ -34,8 +30,6 @@ export default function login(state = loginInitialState, action) {
         }
 
         case USER_LOGIN_FAILURE: {
-            user(state, action);
-
             return state
                 .set('key', action.key)
                 .set('loggedIn', false)

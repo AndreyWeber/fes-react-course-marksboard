@@ -10,4 +10,4 @@
 **/.DS_Store
 **/npm-debug.log
 **/build
-*/public/static/config.js
+public/static/config.js

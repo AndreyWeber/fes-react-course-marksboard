@@ -1,40 +1,52 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { totalScore } from '../actions';
+import { getReviews } from '../selectors/reviews';
 import { getUser } from '../selectors/user';
 
 import TotalScore from '../components/TotalScore.jsx';
 import Loader from '../components/Loader.jsx';
 
-@connect(mapStateToProps, { totalScore })
+@connect(mapStateToProps, undefined)
 export default class TotalScorePage extends Component {
     static propTypes = {
-        totalScore: PropTypes.func.isRequired,
+        reviews: PropTypes.shape({
+            filter: PropTypes.func
+        }).isRequired,
         user: PropTypes.shape({
             isFetching: PropTypes.bool.isRequired,
             login: PropTypes.string.isRequired,
             name: PropTypes.string.isRequired,
-            totalScore: PropTypes.number.isRequired
-        })
+        }),
     };
 
-    componentWillMount() {
-        this.props.totalScore(this.props.user.login);
+    getTotalScore() {
+        const {
+            reviews,
+            user: { login }
+        } = this.props;
+
+        return reviews
+            .filter(review =>
+                review.get('student').trim() === login.trim()
+            )
+            .reduce((score, item) =>
+                score + parseFloat(item.get('points', 0)),
+                0
+            );
     }
 
     render () {
         const {
             name,
-            isFetching,
-            totalScore
+            isFetching
         } = this.props.user;
 
         return (
             <Loader loading={isFetching}>
                 <TotalScore
                     name={name}
-                    totalScore={totalScore}
+                    totalScore={this.getTotalScore()}
                 />
             </Loader>
         );
@@ -43,6 +55,7 @@ export default class TotalScorePage extends Component {
 
 function mapStateToProps(state) {
     return {
-        user: getUser(state).toJS()
+        user: getUser(state).toJS(),
+        reviews: getReviews(state)
     };
 }

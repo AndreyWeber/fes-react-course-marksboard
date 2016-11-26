@@ -6,13 +6,18 @@ import config from './api.config.js';
 /**
 * Constants
 **/
-const REVIEWS_TAB = 'Reviews';
-const DIVISION_TAB = 'Division';
-const POINTS_TAB = 'Points';
-const STUDENTS_TAB = 'Students';
-const MENTORS_TAB = 'Mentors';
-const LESSONS_TAB = 'Lessons';
-const TASKS_TAB = 'Tasks';
+const tabs = {
+    reviews: 'Reviews',
+    division: 'Division',
+    points: 'Points',
+    students: 'Students',
+    mentors: 'Mentors',
+    lessons: 'Lessons',
+    tasks: 'Tasks'
+};
+
+const HEADER_RANGE = '1:1';
+const DATA_RANGE = '2:1000';
 
 /**
 * Helper methods
@@ -33,9 +38,9 @@ const get = params => initGapi().then(() =>
 const batchGet = params => initGapi().then(() =>
     gapi.client.sheets.spreadsheets.values.batchGet(params));
 
-function toListOfMaps(rows) {
+function toListOfMaps(rows, tabName) {
     if (!rows) {
-        throw new Error('Provided tab rows list is empty');
+        throw new Error(`Provided '${tabName}' tab rows list is empty`);
     }
 
     const {
@@ -67,12 +72,14 @@ export function getStudents() {
             batchGet({
                 spreadsheetId: config.spreadsheetId,
                 majorDimension: 'ROWS',
-                ranges: [`${STUDENTS_TAB}!1:1`, `${STUDENTS_TAB}!2:1000`],
+                ranges: [
+                    `${tabs.students}!${HEADER_RANGE}`,
+                    `${tabs.students}!${DATA_RANGE}`],
             }).then(
                 // Process correct response
                 response => {
                     try {
-                        resolve(toListOfMaps(response));
+                        resolve(toListOfMaps(response, tabs.students));
                     } catch(error) {
                         reject(error);
                     }
@@ -114,12 +121,14 @@ export function getReviews() {
             batchGet({
                 spreadsheetId: config.spreadsheetId,
                 majorDimension: 'ROWS',
-                ranges: [`${REVIEWS_TAB}!1:1`, `${REVIEWS_TAB}!2:1000`],
+                ranges: [
+                    `${tabs.reviews}!${HEADER_RANGE}`,
+                    `${tabs.reviews}!${DATA_RANGE}`],
             }).then(
                 // Process correct response
                 response => {
                     try {
-                        resolve(toListOfMaps(response));
+                        resolve(toListOfMaps(response, tabs.reviews));
                     } catch(error) {
                         reject(error);
                     }
@@ -130,27 +139,5 @@ export function getReviews() {
         };
 
         gapi.load('client', callApi);
-    });
-}
-
-export function getStudentTotalScore(login) {
-    return new Promise((resolve, reject) => {
-        if (!login) {
-            reject("Empty login value provided. Can't count student total score.");
-        }
-
-        getReviews()
-            .then(result => resolve(
-                result
-                    .filter(review =>
-                        review.get('student').trim() === login.trim()
-                    )
-                    .reduce((score, item) =>
-                        score + parseFloat(item.get('points', 0)),
-                        0
-                    )
-                )
-            )
-            .catch(error => reject(error));
     });
 }
