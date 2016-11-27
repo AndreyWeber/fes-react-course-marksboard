@@ -108,12 +108,14 @@ export function getStudent(id, idName) {
                 if (user) {
                     resolve(user);
                 } else {
-                    reject(`User with "${id}" ${idName} not found`);
+                    reject(`User with ${idName} "${id}" not found`);
                 }
             })
             .catch(error => reject(error));
     });
 }
+
+export const getStudentByKey = key => getStudent(key, 'key');
 
 export function getReviews() {
     return new Promise((resolve, reject) => {

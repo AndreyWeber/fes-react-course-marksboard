@@ -1,14 +1,18 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { getReviews } from '../selectors/reviews';
+import { fetchReviews } from '../actions';
+import { getEntities, isFetching } from '../selectors/reviews';
 import { getUser } from '../selectors/login';
 
+import Loader from '../components/Loader.jsx';
 import TotalScore from '../components/TotalScore.jsx';
 
-@connect(mapStateToProps, undefined)
+@connect(mapStateToProps, { fetchReviews })
 export default class TotalScorePage extends Component {
     static propTypes = {
+        fetchReviews: PropTypes.func.isRequired,
+        isFetching: PropTypes.bool.isRequired,
         reviews: PropTypes.shape({
             filter: PropTypes.func
         }).isRequired,
@@ -17,6 +21,10 @@ export default class TotalScorePage extends Component {
             name: PropTypes.string.isRequired,
         }),
     };
+
+    componentWillMount() {
+        this.props.fetchReviews();
+    }
 
     getTotalScore() {
         const {
@@ -35,11 +43,18 @@ export default class TotalScorePage extends Component {
     }
 
     render () {
+        const {
+            user: { name },
+            isFetching
+        } = this.props;
+
         return (
-            <TotalScore
-                name={this.props.user.name}
-                totalScore={this.getTotalScore()}
-            />
+            <Loader loading={isFetching}>
+                <TotalScore
+                    name={name}
+                    totalScore={this.getTotalScore()}
+                />
+            </Loader>
         );
     }
 }
@@ -47,6 +62,7 @@ export default class TotalScorePage extends Component {
 function mapStateToProps(state) {
     return {
         user: getUser(state).toJS(),
-        reviews: getReviews(state)
+        isFetching: isFetching(state),
+        reviews: getEntities(state)
     };
 }

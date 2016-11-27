@@ -7,7 +7,8 @@ import { Provider } from 'react-redux';
 import routes from './routes.jsx';
 import configureStore from './store';
 
-import { fetchReviews } from './actions';
+import { userLogin } from './actions';
+import { getUserKey } from './utils/localStorage';
 
 import 'normalize.css';
 import './assets/main.less';
@@ -31,6 +32,13 @@ function renderApp() {
     );
 }
 
-fetchReviews()(store.dispatch);
+function startApp() {
+    const userKey = getUserKey();
+    if (userKey) {
+        store.dispatch(userLogin(userKey, renderApp));
+    } else {
+        renderApp();
+    }
+}
 
-renderApp();
+startApp();

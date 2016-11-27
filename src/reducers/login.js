@@ -17,6 +17,7 @@ export default function login(state = loginInitialState, action) {
     switch (action.type) {
         case USER_LOGIN_REQUEST: {
             return state
+                .merge(loginInitialState)
                 .set('loggingIn', true);
         }
 

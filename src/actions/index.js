@@ -1,13 +1,8 @@
-import {
-    getFromStorage,
-    putInStorage
-} from '../utils/localStorage';
+import { setUserKey } from '../utils/localStorage';
 import {
     getReviews,
-    getStudent,
+    getStudentByKey,
 } from '../api';
-
-import { USER_KEY_STORAGE_NODE_NAME } from '../utils/localStorage';
 
 export const USER_LOGIN_REQUEST = 'USER_LOGIN_REQUEST';
 export const USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS';
@@ -17,28 +12,36 @@ export const FETCH_REVIEWS_REQUEST = 'FETCH_REVIEWS_REQUEST';
 export const FETCH_REVIEWS_SUCCESS = 'FETCH_REVIEWS_SUCCESS';
 export const FETCH_REVIEWS_FAILURE = 'FETCH_REVIEWS_FAILURE';
 
-export const userLogin = key => dispatch => {
+export const userLogin = (key, loginCallback = undefined) => dispatch => {
     dispatch({
         type: USER_LOGIN_REQUEST
     });
 
-    putInStorage(null, USER_KEY_STORAGE_NODE_NAME);
-
-    getStudent(key, 'key')
+    const call = callback => {
+        if (callback && typeof callback === typeof Function) {
+            callback();
+        }
+    };
+    getStudentByKey(key)
         .then(user => {
-            putInStorage(user.get('key'),
-                USER_KEY_STORAGE_NODE_NAME);
+            setUserKey(user.get('key'));
 
             dispatch({
                 type: USER_LOGIN_SUCCESS,
                 user
             });
+
+            call(loginCallback);
         })
-        .catch(error => dispatch({
-            type: USER_LOGIN_FAILURE,
-            key,
-            error
-        }));
+        .catch(error => {
+            dispatch({
+                type: USER_LOGIN_FAILURE,
+                key,
+                error
+            });
+
+            call(loginCallback);
+        });
 };
 
 export const fetchReviews = () => dispatch => {

@@ -16,3 +16,8 @@ export const getUser = createSelector(
     getLogin,
     login => login.get('user')
 );
+
+export const getError = createSelector(
+    getLogin,
+    login => login.get('error')
+);

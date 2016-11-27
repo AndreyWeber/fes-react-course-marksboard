@@ -7,7 +7,7 @@ import {
 } from '../actions';
 
 const reviewsInitialState = fromJS({
-    entities: {},
+    entities: [],
     isFetching: false,
     error: null
 });
@@ -16,30 +16,20 @@ export default function reviews(state = reviewsInitialState, action) {
     switch (action.type) {
         case FETCH_REVIEWS_REQUEST: {
             return state
-                .merge({
-                    entities: {},
-                    isFetching: true,
-                    error: null
-                });
+                .merge(reviewsInitialState)
+                .set('isFetching', true);
         }
 
         case FETCH_REVIEWS_SUCCESS: {
-            console.log('FETCH_REVIEWS_SUCCESS');
             return state
-                .merge({
-                    entities: action.reviews,
-                    isFetching: false,
-                    error: null
-                });
+                .merge(reviewsInitialState)
+                .set('entities', action.reviews);
         }
 
         case FETCH_REVIEWS_FAILURE: {
             return state
-                .merge({
-                    entities: {},
-                    isFetching: false,
-                    error: action.error
-                });
+                .merge(reviewsInitialState)
+                .set('error', action.error);
         }
 
         default: {
