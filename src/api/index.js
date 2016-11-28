@@ -24,19 +24,34 @@ const DATA_RANGE = '2:1000';
 **/
 function initGapi() {
     return gapi.client.init({
-        'apiKey': config.apiKey,
+        apiKey: config.apiKey,
+        discoveryDocs: [config.discoveryUrl],
         // clientId and scope are optional if auth is not required.
-        //'clientId': 'YOUR_WEB_CLIENT_ID.apps.googleusercontent.com',
-        //'scope': 'https://www.googleapis.com/auth/spreadsheets.readonly'
-    })
-    .then(() => gapi.client.load(config.discoveryUrl));
+        clientId: config.clientId,
+        scope: config.scope
+    });
+    //.then(() => {});
 }
 
+const wrapWithSignIn = (method, params) => {
+    return gapi.auth2.getAuthInstance().isSignedIn.get()
+        ? method(params)
+        : gapi.auth2.getAuthInstance().signIn().then(() => method(params));
+};
+
 const get = params => initGapi().then(() =>
-    gapi.client.sheets.spreadsheets.values.get(params));
+    wrapWithSignIn(
+        gapi.client.sheets.spreadsheets.values.get,
+        params
+    )
+);
 
 const batchGet = params => initGapi().then(() =>
-    gapi.client.sheets.spreadsheets.values.batchGet(params));
+    wrapWithSignIn(
+        gapi.client.sheets.spreadsheets.values.batchGet,
+        params
+    )
+);
 
 function toListOfMaps(rows, tabName) {
     if (!rows) {
@@ -89,7 +104,7 @@ export function getStudents() {
             );
         };
 
-        gapi.load('client', callApi);
+        gapi.load('client:auth2', callApi);
     });
 }
 
@@ -140,6 +155,6 @@ export function getReviews() {
             );
         };
 
-        gapi.load('client', callApi);
+        gapi.load('client:auth2', callApi);
     });
 }

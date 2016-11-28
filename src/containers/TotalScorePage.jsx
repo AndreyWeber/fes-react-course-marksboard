@@ -37,7 +37,7 @@ export default class TotalScorePage extends Component {
                 review.get('student').trim() === login.trim()
             )
             .reduce((score, item) =>
-                score + parseFloat(item.get('points', 0)),
+                score + parseFloat(item.get('mark', 0)),
                 0
             );
     }
