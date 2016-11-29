@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from 'react';
-
 import {
     Button,
     Col,
     Form,
     FormControl,
     FormGroup,
+    Glyphicon,
     HelpBlock,
     InputGroup,
     Panel
@@ -77,7 +77,7 @@ export default class Login extends Component {
                                         <Button
                                             onClick={this.handleClick}
                                         >
-                                            Login
+                                            <Glyphicon glyph="user" />&nbsp;Login
                                         </Button>
                                     </InputGroup.Button>
                                 </InputGroup>
