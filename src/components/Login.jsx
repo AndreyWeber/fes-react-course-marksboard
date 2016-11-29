@@ -1,13 +1,19 @@
 import React, { Component, PropTypes } from 'react';
 
 import {
-    Panel,
-    PanelHeader,
-    PanelFooter,
-    InlineForm
-} from 'rebass';
+    Button,
+    Col,
+    Form,
+    FormControl,
+    FormGroup,
+    HelpBlock,
+    InputGroup,
+    Panel
+} from 'react-bootstrap';
 
 import styles from './Login.less';
+
+const ENTER_KEY = 13;
 
 export default class Login extends Component {
     static propTypes = {
@@ -24,6 +30,7 @@ export default class Login extends Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleClick = this.handleClick.bind(this);
+        this.handleKeyDown = this.handleKeyDown.bind(this);
     }
 
     handleChange(event) {
@@ -32,43 +39,52 @@ export default class Login extends Component {
         });
     }
 
-    handleClick(event) {
+    handleClick() {
         this.props.onLogin(this.state.login);
+    }
 
-        event.preventDefault();
+    handleKeyDown(event) {
+        if (event.keyCode === ENTER_KEY) {
+            this.props.onLogin(this.state.login);
+        }
     }
 
     render() {
-        const panelFooter = this.props.error
-            ? (
-                <PanelFooter>
-                    <span className={styles.errorMessage}>
-                        {this.props.error}
-                    </span>
-                </PanelFooter>
-            )
-            : undefined;
+        const { error } = this.props;
+
+        const title = (<h3 className={styles.loginFormHeader}>Login</h3>);
 
         return (
             <div className={styles.root}>
-                <Panel
-                    rounded
-                    theme="default"
-                >
-                    <PanelHeader>
-                        Login
-                    </PanelHeader>
-                    <InlineForm
-                        buttonLabel="Go"
-                        label="Login"
-                        name="inlineFormLogin"
-                        placeholder="Please provide you key to login..."
-                        style={{ margin: 30 }}
-                        value={this.state.login}
-                        onChange={this.handleChange}
-                        onClick={this.handleClick}
-                    />
-                    {panelFooter}
+                <Panel header={title}>
+                    <Form
+                        horizontal
+                        style={{ paddingTop: 20}}
+                    >
+                        <Col xs={12}>
+                            <FormGroup
+                                controlId="formLogin"
+                                validationState={error ? 'error' : null}
+                            >
+                                <InputGroup>
+                                    <FormControl
+                                        placeholder="Please provide you user key to login..."
+                                        type="text"
+                                        onChange={this.handleChange}
+                                        onKeyDown={this.handleKeyDown}
+                                    />
+                                    <InputGroup.Button>
+                                        <Button
+                                            onClick={this.handleClick}
+                                        >
+                                            Login
+                                        </Button>
+                                    </InputGroup.Button>
+                                </InputGroup>
+                                <HelpBlock>{error}</HelpBlock>
+                            </FormGroup>
+                        </Col>
+                    </Form>
                 </Panel>
             </div>
         );
