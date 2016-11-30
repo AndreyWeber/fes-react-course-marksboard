@@ -47,10 +47,24 @@ module.exports = {
                 test: /\.json$/,
                 exclude: /node_modules/,
                 loader: 'json-loader'
+            },
+            {
+                test: /\.(jpe?g|png|gif|svg)$/i,
+                exclude: /node_modules/,
+                loaders: [
+                    'file-loader?hash=sha512&digest=hex&name=[hash].[ext]',
+                    'image-webpack-loader?bypassOnDebug&optimizationLevel=7&interlaced=false'
+                ]
             }
         ]
     },
     plugins: [
+        new webpack.optimize.UglifyJsPlugin({
+            minimize: true,
+            compress: {
+                warnings: false
+            }
+        }),
         new webpack.DefinePlugin({
             'process.env': {
                 'NODE_ENV': JSON.stringify(NODE_ENV)

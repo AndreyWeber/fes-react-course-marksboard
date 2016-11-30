@@ -52,40 +52,39 @@ export default class Login extends Component {
     render() {
         const { error } = this.props;
 
-        const title = (<h3 className={styles.loginFormHeader}>Login</h3>);
-
         return (
             <div className={styles.root}>
-                <Panel header={title}>
-                    <Form
-                        horizontal
-                        style={{ paddingTop: 20}}
-                    >
-                        <Col xs={12}>
-                            <FormGroup
-                                controlId="formLogin"
-                                validationState={error ? 'error' : null}
+                <Form horizontal>
+                    <Col xs={12}>
+                        <FormGroup
+                            bsSize="large"
+                            controlId="formLogin"
+                        >
+                            <HelpBlock style={{color: 'black', fontWeight: 'bold'}}>
+                                {error}
+                            </HelpBlock>
+                            <FormControl
+                                placeholder="Please give us you magic user key... :)"
+                                type="text"
+                                onChange={this.handleChange}
+                                onKeyDown={this.handleKeyDown}
+                            />
+
+                            <Col
+                                style={{marginTop: 20}}
+                                xs={6}
+                                xsOffset={4}
                             >
-                                <InputGroup>
-                                    <FormControl
-                                        placeholder="Please provide you user key to login..."
-                                        type="text"
-                                        onChange={this.handleChange}
-                                        onKeyDown={this.handleKeyDown}
-                                    />
-                                    <InputGroup.Button>
-                                        <Button
-                                            onClick={this.handleClick}
-                                        >
-                                            <Glyphicon glyph="user" />&nbsp;Login
-                                        </Button>
-                                    </InputGroup.Button>
-                                </InputGroup>
-                                <HelpBlock>{error}</HelpBlock>
-                            </FormGroup>
-                        </Col>
-                    </Form>
-                </Panel>
+                                <Button
+                                    bsStyle="success"
+                                    onClick={this.handleClick}
+                                >
+                                    Come in, please
+                                </Button>
+                            </Col>
+                        </FormGroup>
+                    </Col>
+                </Form>
             </div>
         );
     }
