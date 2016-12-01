@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-sort-props */
 import React from 'react';
 import { Redirect, Route } from 'react-router';
 
@@ -9,8 +10,6 @@ import LoginPage from './containers/LoginPage.jsx';
 import TotalScorePage from './containers/TotalScorePage.jsx';
 import NotFound from './components/NotFound.jsx';
 
-/* eslint-disable react/jsx-sort-props */
-
 export default (
     <Route component={App}>
         <Redirect from="/" to="login" />
@@ -21,5 +20,3 @@ export default (
         </Route>
     </Route>
 );
-
-/* eslint-enable react/jsx-sort-props */
