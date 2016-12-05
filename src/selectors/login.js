@@ -12,12 +12,7 @@ export const isLoggingIn = createSelector(
     login => login.get('loggingIn')
 );
 
-export const getUser = createSelector(
-    getLogin,
-    login => login.get('user')
-);
-
-export const getError = createSelector(
+export const getLoginError = createSelector(
     getLogin,
     login => login.get('error')
 );

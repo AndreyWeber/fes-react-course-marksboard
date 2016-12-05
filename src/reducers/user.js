@@ -6,32 +6,32 @@ import {
     USER_LOGIN_FAILURE
 } from '../actions';
 
-const loginInitialState = fromJS({
-    loggedIn: false,
-    loggingIn: false,
+const userInitialState = fromJS({
+    key: '',
+    login: '',
+    name: '',
+    github: '',
+    facebook: '',
+    email: '',
+    city: '',
     error: null
 });
 
-export default function login(state = loginInitialState, action) {
+export default function user(state = userInitialState, action) {
     switch (action.type) {
         case USER_LOGIN_REQUEST: {
-            return state
-                .set('loggedIn', false)
-                .set('loggingIn', true)
+            return userInitialState
                 .set('error', null);
         }
 
         case USER_LOGIN_SUCCESS: {
-            return state
-                .set('loggedIn', true)
-                .set('loggingIn', false)
+            return action.user
                 .set('error', null);
         }
 
         case USER_LOGIN_FAILURE: {
-            return state
-                .set('loggedIn', false)
-                .set('loggingIn', false)
+            return userInitialState
+                .set('key', action.key)
                 .set('error', action.error);
         }
 

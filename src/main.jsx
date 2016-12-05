@@ -8,7 +8,7 @@ import routes from './routes.jsx';
 import configureStore from './store';
 
 import { userLogin } from './actions';
-import { getUserKey } from './utils/localStorage';
+import { getCurrentUserKey } from './utils/session';
 
 import 'normalize.css';
 import './assets/main.less';
@@ -33,7 +33,7 @@ function renderApp() {
 }
 
 function startApp() {
-    const userKey = getUserKey();
+    const userKey = getCurrentUserKey();
     if (userKey) {
         store.dispatch(userLogin(userKey, renderApp));
     } else {

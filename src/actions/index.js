@@ -1,4 +1,4 @@
-import { setUserKey } from '../utils/localStorage';
+import { setCurrentUserKey } from '../utils/session';
 import {
     getReviews,
     getStudentByKey,
@@ -24,7 +24,7 @@ export const userLogin = (key, loginCallback = undefined) => dispatch => {
     };
     getStudentByKey(key)
         .then(user => {
-            setUserKey(user.get('key'));
+            setCurrentUserKey(user.get('key'));
 
             dispatch({
                 type: USER_LOGIN_SUCCESS,

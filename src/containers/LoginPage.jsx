@@ -4,7 +4,7 @@ import { replace } from 'react-router-redux';
 
 import { userLogin } from '../actions';
 import {
-    getError,
+    getLoginError,
     isLoggedIn,
     isLoggingIn
 } from '../selectors/login';
@@ -13,18 +13,18 @@ import { getLocationState } from '../selectors/routing';
 import Login from '../components/Login.jsx';
 import Loader from '../components/Loader.jsx';
 
-const AFTER_LOGIN_PATH = '/totalscore';
+const NEXT_PATHNAME_DEFAULT = '/totalscore';
 
 @connect(mapStateToProps, { replace, userLogin })
 export default class LoginPage extends Component {
     static propTypes = {
-        error: PropTypes.string,
         isLoggedIn: PropTypes.bool.isRequired,
         isLoggingIn: PropTypes.bool.isRequired,
         locationState: PropTypes.shape({
             nextPathname: PropTypes.string,
             nextQuery: PropTypes.object
         }),
+        loginError: PropTypes.string,
         replace: PropTypes.func.isRequired,
         userLogin: PropTypes.func.isRequired
     };
@@ -53,19 +53,19 @@ export default class LoginPage extends Component {
     setLocation(locationState) {
         if (locationState) {
             this.props.replace({
-                pathname: locationState.nextPathname,
-                query: locationState.nextQuery
+                pathname: locationState.get('nextPathname'),
+                query: locationState.get('nextQuery').toJS()
             });
         } else {
             this.props.replace({
-                pathname: AFTER_LOGIN_PATH
+                pathname: NEXT_PATHNAME_DEFAULT
             });
         }
     }
 
     render() {
         const {
-            error,
+            loginError,
             isLoggingIn,
             userLogin
         } = this.props;
@@ -73,7 +73,7 @@ export default class LoginPage extends Component {
         return (
             <Loader loading={isLoggingIn}>
                 <Login
-                    error={error}
+                    error={loginError}
                     onLogin={userLogin}
                 />
             </Loader>
@@ -85,9 +85,9 @@ function mapStateToProps(state) {
     const locationState = getLocationState(state);
 
     return {
-        error: getError(state),
+        loginError: getLoginError(state),
         isLoggedIn: isLoggedIn(state),
         isLoggingIn: isLoggingIn(state),
-        locationState: locationState && locationState.toJS()
+        locationState: locationState
     };
 }

@@ -1,23 +1,23 @@
 import React, { PropTypes } from 'react';
-import Spinner from 'react-spinkit';
-import { ControlLabel } from 'react-bootstrap';
+import { CubeGrid  } from 'better-react-spinkit';
 
 import styles from './Loader.less';
 
 const Loader = props => {
     const spinner = (
         <div className={styles.spinnerContainer}>
-            <Spinner
-                noFadeIn
-                overrideSpinnerClassName={styles.spinner}
-                spinnerName="three-bounce"
+            <CubeGrid
+                color='#EF5350'
+                size={70}
             />
-            <ControlLabel>Loading</ControlLabel>
+            <div className={styles.spinnerLabel}>
+                Hyper jump is in progress
+            </div>
         </div>
     );
 
     return (
-        <div className={styles.root}>
+        <div className={styles.loaderRoot}>
             {
                 props.loading
                     ? spinner

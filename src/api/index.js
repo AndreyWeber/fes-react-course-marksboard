@@ -1,3 +1,4 @@
+/* eslint-disable no-undef, no-unused-vars */
 import { fromJS, Map } from 'immutable';
 import camelCase from 'camel-case';
 
