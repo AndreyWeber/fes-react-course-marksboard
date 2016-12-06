@@ -1,0 +1,35 @@
+@import '../assets/main.less';
+
+.root {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    background: url("../../public/static/img/main_bg.png") no-repeat @total-score-bg-color;
+    background-size: 100% auto;
+    color: @main-text-color;
+    font-size: 18px;
+    text-transform: uppercase;
+    text-shadow: 0 0 2px @main-text-color, 0 0 10px @main-text-color;
+}
+
+.highlightedText {
+    color: @alternate-text-color;
+    font-weight: 600;
+    text-shadow: none;
+}
+
+.congratsMessage {
+    color: @alternate-text-color;
+    text-shadow: none;
+    padding-bottom: 5px;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.totalScore {
+    font-size: 200px;
+    font-weight: 600;
+}

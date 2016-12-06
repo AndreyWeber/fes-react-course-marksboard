@@ -1,18 +1,75 @@
-// external libs
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
+import {
+    Button,
+    FormControl,
+    FormGroup,
+    HelpBlock
+} from 'react-bootstrap';
 
-// my libs (utils, actions)
+import styles from './Login.less';
 
-// external components
+const ENTER_KEY = 13;
 
-// my components
+export default class Login extends Component {
+    static propTypes = {
+        error: PropTypes.string,
+        onLogin: PropTypes.func.isRequired
+    };
 
-// styles
+    constructor(props) {
+        super(props);
 
-// constants
+        this.state = {
+            login: ''
+        };
+    }
 
-const Login = () => <div></div>;
+    handleLoginChange = event => {
+        this.setState({
+            login: event.target.value
+        });
+    };
 
-Login.propTypes = {};
+    handleKeyDownOnLoginInput = event => {
+        if (event.keyCode === ENTER_KEY) {
+            this.props.onLogin(this.state.login);
+        }
+    };
 
-export default Login;
+    handleLogin = () => {
+        this.props.onLogin(this.state.login);
+    };
+
+    render() {
+        const { error } = this.props;
+
+        return (
+            <div className={styles.loginRoot}>
+                <div className={styles.loginContainer}>
+                    <FormGroup
+                        bsSize="large"
+                        className={styles.loginFormGroup}
+                        controlId="formLogin"
+                    >
+                        <HelpBlock className={styles.loginHelpBlock}>
+                            {error}
+                        </HelpBlock>
+                        <FormControl
+                            placeholder="Please provide your key to start... :)"
+                            type="text"
+                            onChange={this.handleLoginChange}
+                            onKeyDown={this.handleKeyDownOnLoginInput}
+                        />
+                        <Button
+                            bsStyle="danger"
+                            className={styles.loginButton}
+                            onClick={this.handleLogin}
+                        >
+                            Take off!
+                        </Button>
+                    </FormGroup>
+                </div>
+            </div>
+        );
+    }
+}

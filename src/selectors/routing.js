@@ -13,3 +13,8 @@ export const getPathname = createSelector(
     location => location.get('pathname')
 );
 
+export const getLocationState = createSelector(
+    getLocation,
+    location => location.get('state')
+);
+

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const express = require('express');
 const path = require('path');
 const port = process.env.PORT || 8080;
@@ -13,6 +14,4 @@ app.get('*', function (request, response){
 });
 
 app.listen(port);
-/* eslint-disable no-console */
 console.log('server started on port ' + port);
-/* eslint-enable no-console */

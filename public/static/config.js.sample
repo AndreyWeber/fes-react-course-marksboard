@@ -1,0 +1,7 @@
+var APP_CONFIG = {
+    apiKey:         'AIzaSyDu8kDrHdk0QEFCYe0LZn4rm7phXZ9tJ7g',
+    clientId:       '326560008785-g3iungt3ffj1lk2dpv67001ati8rgmm8.apps.googleusercontent.com',
+    spreadsheetId:  '1C7PWqTPcK1IbDWTbYH_NkDQOszKD5dtVW51i9SW-UxU',
+    discoveryUrl:   'https://sheets.googleapis.com/$discovery/rest?version=v4',
+    scope:          'https://www.googleapis.com/auth/spreadsheets.readonly'
+};

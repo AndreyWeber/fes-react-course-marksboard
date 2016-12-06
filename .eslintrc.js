@@ -49,7 +49,6 @@ module.exports = {
         "quotes": ["error", "single", { "avoidEscape": true }],
         "semi": ["error", "always"],
         "eol-last": "error",
-
         "react/jsx-uses-vars": "error",
         "react/forbid-component-props": ["error", {
             "forbid": []
@@ -59,6 +58,10 @@ module.exports = {
             "callbacksLast": true,
             "ignoreCase": true,
             "requiredFirst": false
+        }],
+        "react/jsx-sort-props": ["error", {
+            "callbacksLast": true,
+            "ignoreCase": true
         }]
     }
 };
