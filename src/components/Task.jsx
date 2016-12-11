@@ -2,48 +2,34 @@
 import React, { PropTypes } from 'react';
 
 // my libs (utils, actions)
+import {
+    TASK_NOT_FINISHED,
+    TASK_FINISHED,
+    TASK_FINISHED_WITH_EXCELLENCE
+} from '../constants';
 
 // external components
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import FaCircle from 'react-icons/fa/circle';
-import GitPullRequest from 'react-icons/go/git-pull-request';
+
 // my components
+import TaskStatusIcon from './TaskStatusIcon.jsx';
+import PullRequestIcon from './PullRequestIcon.jsx';
 
 // styles
 import styles from './Task.less';
 
 // constants
 
-const getTaskStatusIcon = (tooltip, { mark, pointsMax }) => {
-    let tooltipMsg,
-        taskStatusStyle;
+const getTaskStatus = ({mark, pointsMax}) => {
     if (mark === undefined || mark === null) {
-        tooltipMsg = 'Task not finished yet';
-        taskStatusStyle = styles.taskStatusNotFinished;
-    } else if (mark === pointsMax) {
-        tooltipMsg = 'Task complete. Excellent!';
-        taskStatusStyle = styles.taskStatusExcellent;
-    } else if (mark < pointsMax) {
-        taskStatusStyle = styles.taskStatusAverage;
-        tooltipMsg = 'Task complete.';
+        return TASK_NOT_FINISHED;
     }
 
-    return (
-        <OverlayTrigger
-            delayHide={150}
-            delayShow={300}
-            overlay={tooltip(tooltipMsg)}
-            placement="left"
-        >
-            <FaCircle
-                className={taskStatusStyle}
-                size={14}
-            />
-        </OverlayTrigger>
-    );
-};
+    if (mark === pointsMax) {
+        return TASK_FINISHED_WITH_EXCELLENCE;
+    }
 
-const getTooltip = text => <Tooltip id="tooltip">{text}</Tooltip>;
+    return TASK_FINISHED;
+};
 
 const Task = props => {
     const mark = props.mark === undefined || props.mark === null
@@ -54,13 +40,19 @@ const Task = props => {
         <div className={styles.root}>
             <div className={styles.header}>
                 <div>{props.name}</div>
-                <div>{`${mark}/${props.pointsMax}`}</div>
+                <div>
+                    {`${mark}/${props.pointsMax}`}
+                </div>
             </div>
             <div className={styles.footer}>
-                {getTaskStatusIcon(getTooltip, props)}
-                <a href="http://ya.ru">
-                    <GitPullRequest className={styles.pullRequestIcon} />
-                </a>
+                <TaskStatusIcon
+                    taskStatus={getTaskStatus(props)}
+                    tooltipPosition="left"
+                />
+                <PullRequestIcon
+                    pullRequestUrl={props.pullRequestUrl}
+                    tooltipPosition="top"
+                />
                 {`${props.checkDate || 'N/A'}`}
             </div>
         </div>
