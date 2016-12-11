@@ -17,12 +17,13 @@ const tabs = {
     tasks: 'Tasks'
 };
 
+const RANGE_UPPER_BOUNDARY = '2000';
 const HEADER_RANGE = '1:1';
-const DATA_RANGE = '2:1000';
+const DATA_RANGE = `2:${RANGE_UPPER_BOUNDARY}`;
 
-/**
-* Helper methods
-**/
+/*****************
+ * Helper methods
+ *****************/
 function initGapi() {
     return gapi.client.init({
         apiKey: config.apiKey,
@@ -79,23 +80,20 @@ function toListOfMaps(rows, tabName) {
     );
 }
 
-/**
-* API methods
-**/
-export function getStudents() {
+function getSpreadsheetTabData(tabName) {
     return new Promise((resolve, reject) => {
         const callApi = () => {
             batchGet({
                 spreadsheetId: config.spreadsheetId,
                 majorDimension: 'ROWS',
                 ranges: [
-                    `${tabs.students}!${HEADER_RANGE}`,
-                    `${tabs.students}!${DATA_RANGE}`],
+                    `${tabName}!${HEADER_RANGE}`,
+                    `${tabName}!${DATA_RANGE}`]
             }).then(
                 // Process correct response
                 response => {
                     try {
-                        resolve(toListOfMaps(response, tabs.students));
+                        resolve(toListOfMaps(response, tabName));
                     } catch(error) {
                         reject(error);
                     }
@@ -108,6 +106,15 @@ export function getStudents() {
         gapi.load('client:auth2', callApi);
     });
 }
+
+/**************
+ * API methods
+ **************/
+
+/**
+ * Students
+ **/
+export const getStudents = () => getSpreadsheetTabData(tabs.students);
 
 export function getStudent(id, idName) {
     return new Promise((resolve, reject) => {
@@ -133,29 +140,12 @@ export function getStudent(id, idName) {
 
 export const getStudentByKey = key => getStudent(key, 'key');
 
-export function getReviews() {
-    return new Promise((resolve, reject) => {
-        const callApi = () => {
-            batchGet({
-                spreadsheetId: config.spreadsheetId,
-                majorDimension: 'ROWS',
-                ranges: [
-                    `${tabs.reviews}!${HEADER_RANGE}`,
-                    `${tabs.reviews}!${DATA_RANGE}`],
-            }).then(
-                // Process correct response
-                response => {
-                    try {
-                        resolve(toListOfMaps(response, tabs.reviews));
-                    } catch(error) {
-                        reject(error);
-                    }
-                },
-                // Process error response
-                response => reject(response.result.error.message)
-            );
-        };
+/**
+ * Reviews
+ **/
+export const getReviews = () => getSpreadsheetTabData(tabs.reviews);
 
-        gapi.load('client:auth2', callApi);
-    });
-}
+/**
+ * Lessons & Tasks
+ **/
+export const getTasks = () => getSpreadsheetTabData(tabs.tasks);

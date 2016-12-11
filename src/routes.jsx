@@ -8,6 +8,7 @@ import App from './components/App.jsx';
 import LoggedInLayout from './components/LoggedInLayout.jsx';
 import LoginPage from './containers/LoginPage.jsx';
 import TotalScorePage from './containers/TotalScorePage.jsx';
+import LessonsPage from './containers/LessonsPage.jsx';
 import NotFound from './components/NotFound.jsx';
 
 export default (
@@ -16,6 +17,7 @@ export default (
         <Route path="login" component={LoginPage} />
         <Route component={requireAuthentication(LoggedInLayout)}>
             <Route path="totalscore" component={TotalScorePage} />
+            <Route path="lessons" component={LessonsPage} />
             <Route path="*" component={NotFound} />
         </Route>
     </Route>
