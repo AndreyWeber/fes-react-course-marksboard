@@ -1,23 +1,15 @@
-// external libs
 import React, { PropTypes } from 'react';
 
-// my libs (utils, actions)
 import {
     TASK_NOT_FINISHED,
     TASK_FINISHED,
     TASK_FINISHED_WITH_EXCELLENCE
 } from '../constants';
 
-// external components
-
-// my components
 import TaskStatusIcon from './TaskStatusIcon.jsx';
 import PullRequestIcon from './PullRequestIcon.jsx';
 
-// styles
 import styles from './Task.less';
-
-// constants
 
 const getTaskStatus = ({mark, pointsMax}) => {
     if (mark === undefined || mark === null) {
@@ -39,21 +31,32 @@ const Task = props => {
     return (
         <div className={styles.root}>
             <div className={styles.header}>
-                <div>{props.name}</div>
-                <div>
+                <div className={styles.taskName}>
+                    {props.name}
+                </div>
+                <div className={styles.taskCheckDate}>
+                    {`${props.checkDate || 'N/A'}`}
+                </div>
+                <div className={styles.taskScore}>
                     {`${mark}/${props.pointsMax}`}
                 </div>
             </div>
+
             <div className={styles.footer}>
-                <TaskStatusIcon
-                    taskStatus={getTaskStatus(props)}
-                    tooltipPosition="left"
-                />
-                <PullRequestIcon
-                    pullRequestUrl={props.pullRequestUrl}
-                    tooltipPosition="top"
-                />
-                {`${props.checkDate || 'N/A'}`}
+                <div className={styles.taskIcon}>
+                    <TaskStatusIcon
+                        size={22}
+                        taskStatus={getTaskStatus(props)}
+                        tooltipPosition="left"
+                    />
+                </div>
+                <div className={styles.taskIcon}>
+                    <PullRequestIcon
+                        pullRequestUrl={props.pullRequestUrl}
+                        size={22}
+                        tooltipPosition="right"
+                    />
+                </div>
             </div>
         </div>
     );

@@ -43,8 +43,8 @@ const Lesson = props => (
         </div>
         <div>
             <Task checkDate="06.12.2016 22:23:44" name="Little tasks about arrays" pointsMax={1} />
-            <Task mark={1} name="Little tasks about arrays" pointsMax={1} />
-            <Task mark={1} name="Little tasks about arrays" pointsMax={1} />
+            {/*<Task mark={1} name="Some very very very very long task name. Really long. Indeed. Much longer then you can imagine." pointsMax={1} />*/}
+            <Task mark={11} name="Little tasks about arrays" pointsMax={20} />
             <Task mark={1} name="Little tasks about arrays" pointsMax={1} />
             <Task mark={0} name="Little tasks about arrays"  pointsMax={1} />
             <Task mark={1} name="Little tasks about arrays"  pointsMax={1} />

@@ -41,7 +41,7 @@ const getStatusIconProps = taskStatus => {
     }
 };
 
-const TaskStatusIcon = ({taskStatus, tooltipPosition}) => {
+const TaskStatusIcon = ({size = 14, taskStatus, tooltipPosition}) => {
     const iconProps = getStatusIconProps(taskStatus);
 
     return (
@@ -57,13 +57,14 @@ const TaskStatusIcon = ({taskStatus, tooltipPosition}) => {
         >
             <FaCircle
                 className={iconProps.iconStyle}
-                size={14}
+                size={size}
             />
         </OverlayTrigger>
     );
 };
 
 TaskStatusIcon.propTypes = {
+    size: PropTypes.number,
     taskStatus: PropTypes
         .oneOf([
             TASK_NOT_FINISHED,

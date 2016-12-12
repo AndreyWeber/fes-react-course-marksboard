@@ -1,53 +1,44 @@
-// external libs
 import React, { PropTypes } from 'react';
 
-// my libs (utils, actions)
-
-// external components
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import GitPullRequest from 'react-icons/go/git-pull-request';
 
-// my components
-
-// styles
 import styles from './PullRequestIcon.less';
 
-// constants
-
-const PullRequestIcon = props => {
-    const pullRequestIcon = props.pullRequestUrl
-            ? (
-                <a
-                    href={props.pullRequestUrl || '#'}
-                    target="_blank"
-                >
-                    <GitPullRequest
-                        className={styles.root}
-                        size={16}
-                    />
-                </a>
-            )
-            : (
-                <GitPullRequest
-                    className={styles.root}
-                    size={16}
-                />
-            );
+const PullRequestIcon = ({pullRequestUrl = '', size = 14, tooltipPosition}) => {
+    const gitPullRequest = (
+        <GitPullRequest
+            className={styles.root}
+            size={size}
+        />
+    );
 
     return (
         <OverlayTrigger
             delayHide={150}
             delayShow={300}
             overlay={<Tooltip id="tooltip">Task pull request</Tooltip>}
-            placement={props.tooltipPosition}
+            placement={tooltipPosition}
         >
-            {pullRequestIcon}
+            {
+                pullRequestUrl
+                    ? (
+                        <a
+                            href={pullRequestUrl}
+                            target="_blank"
+                        >
+                            {gitPullRequest}
+                        </a>
+                    )
+                    : gitPullRequest
+            }
         </OverlayTrigger>
     );
 };
 
 PullRequestIcon.propTypes = {
     pullRequestUrl: PropTypes.string,
+    size: PropTypes.number,
     tooltipPosition: PropTypes
         .oneOf(['top', 'right', 'bottom', 'left']).isRequired
 };
