@@ -8,6 +8,7 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 // my components
 import Task from './Task.jsx';
+import ScoreProgressBar from './ScoreProgressBar.jsx';
 
 // styles
 import styles from './Lesson.less';
@@ -40,6 +41,12 @@ const Lesson = props => (
                 <div>{`Lesson ${props.number} - Introduction`}</div>
                 <div>5/6</div>
             </div>
+        </div>
+        <div className={styles.lessonScoreProgress}>
+            <ScoreProgressBar
+                percent={500/6}
+                tooltipPosition="none"
+            />
         </div>
         <div>
             <Task checkDate="06.12.2016 22:23:44" name="Little tasks about arrays" pointsMax={1} />
