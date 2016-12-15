@@ -5,10 +5,45 @@ import PullRequestIcon from './PullRequestIcon.jsx';
 
 import styles from './Task.less';
 
+import { PROGRESS_BAR_COLOR_MAP } from '../constants';
+
+const NOT_FINISHED_MESSAGE = 'Not finished yet';
+const FINISHED_MESSAGE = 'Complete on ';
+const FINISHED_WITH_EXCELLENCE_MESSAGE = 'Excellent! Complete on ';
+
+const getProgressBarProps = percent => {
+    if (percent === 0) {
+        return {
+            tooltipText: NOT_FINISHED_MESSAGE,
+            strokeColor: PROGRESS_BAR_COLOR_MAP.red,
+            trailColor: PROGRESS_BAR_COLOR_MAP.red
+        };
+    }
+
+    if (percent > 0 && percent < 70) {
+        return {
+            tooltipText: `${FINISHED_MESSAGE}${percent}%`,
+            strokeColor: PROGRESS_BAR_COLOR_MAP.yellow,
+            trailColor: PROGRESS_BAR_COLOR_MAP.white
+        };
+    }
+
+    // 70% < percent <= 100%
+    return {
+        tooltipText: `${FINISHED_WITH_EXCELLENCE_MESSAGE}${percent}%`,
+        strokeColor: PROGRESS_BAR_COLOR_MAP.green,
+        trailColor: PROGRESS_BAR_COLOR_MAP.white
+    };
+};
+
 const Task = props => {
     const mark = props.mark === undefined || props.mark === null
         ? 0
         : props.mark;
+
+    const completePercent = (mark * 100) / props.pointsMax;
+
+    const progressBarProps = getProgressBarProps(completePercent);
 
     return (
         <div className={styles.root}>
@@ -34,8 +69,11 @@ const Task = props => {
                 </div>
                 <div className={styles.taskScoreProgress}>
                     <ScoreProgressBar
-                        percent={(mark*100)/props.pointsMax}
+                        percent={completePercent}
+                        strokeColor={progressBarProps.strokeColor}
                         tooltipPosition='right'
+                        tooltipText={progressBarProps.tooltipText}
+                        trailColor={progressBarProps.trailColor}
                     />
                 </div>
             </div>

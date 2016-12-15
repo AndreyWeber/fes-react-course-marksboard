@@ -21,6 +21,11 @@ const Lessons = () => (
                 name="Introduction"
                 number="1"
             />
+            <Lesson
+                mentorLogin="krambertech"
+                name="Introduction"
+                number="1"
+            />
         </div>
     </div>
 );

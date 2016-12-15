@@ -3,6 +3,10 @@
 .root {
     width: 100%;
     margin-top: 5px;
+    margin-bottom: 20px;
+    padding: 5px;
+    border: 1px solid darken(@main-text-color, 75%);
+    border-radius: 3px;
 }
 
 .header {
@@ -12,23 +16,18 @@
     font-size: 18px;
 }
 
-.lessonScoreProgress {
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
-    margin-top: 5px;
-}
-
 .headerText {
     display: flex;
     justify-content: space-between;
     width: 100%;
     margin-left: 10px;
     margin-top: 2px;
+    cursor: pointer;
 }
 
-.mentorAvatar {
-    height: 25px;
-    width: 25px;
-    border-radius: 2px;
+.lessonScoreProgress {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    margin-top: 5px;
 }
