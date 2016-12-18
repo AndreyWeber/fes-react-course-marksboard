@@ -15,7 +15,7 @@ import GithubAvatarLink from './GithubAvatarLink.jsx';
 import styles from './Lesson.less';
 
 // constants
-import { PROGRESS_BAR_COLOR_MAP } from '../constants';
+import { progressBarColorMap } from '../constants';
 
 export default class Lesson extends Component {
     static propTypes = {
@@ -58,9 +58,9 @@ export default class Lesson extends Component {
                 <div className={styles.lessonScoreProgress}>
                     <ScoreProgressBar
                         percent={500/6}
-                        strokeColor={PROGRESS_BAR_COLOR_MAP.green}
+                        strokeColor={progressBarColorMap.green}
                         tooltipPosition="none"
-                        trailColor={PROGRESS_BAR_COLOR_MAP.white}
+                        trailColor={progressBarColorMap.white}
                     />
                 </div>
                 <Collapse in={!this.state.collapse}>

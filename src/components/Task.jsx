@@ -5,7 +5,7 @@ import PullRequestIcon from './PullRequestIcon.jsx';
 
 import styles from './Task.less';
 
-import { PROGRESS_BAR_COLOR_MAP } from '../constants';
+import { progressBarColorMap } from '../constants';
 
 const NOT_FINISHED_MESSAGE = 'Not finished yet';
 const FINISHED_MESSAGE = 'Complete on ';
@@ -15,24 +15,24 @@ const getProgressBarProps = percent => {
     if (percent === 0) {
         return {
             tooltipText: NOT_FINISHED_MESSAGE,
-            strokeColor: PROGRESS_BAR_COLOR_MAP.red,
-            trailColor: PROGRESS_BAR_COLOR_MAP.red
+            strokeColor: progressBarColorMap.red,
+            trailColor: progressBarColorMap.red
         };
     }
 
     if (percent > 0 && percent < 70) {
         return {
             tooltipText: `${FINISHED_MESSAGE}${percent}%`,
-            strokeColor: PROGRESS_BAR_COLOR_MAP.yellow,
-            trailColor: PROGRESS_BAR_COLOR_MAP.white
+            strokeColor: progressBarColorMap.yellow,
+            trailColor: progressBarColorMap.white
         };
     }
 
     // 70% < percent <= 100%
     return {
         tooltipText: `${FINISHED_WITH_EXCELLENCE_MESSAGE}${percent}%`,
-        strokeColor: PROGRESS_BAR_COLOR_MAP.green,
-        trailColor: PROGRESS_BAR_COLOR_MAP.white
+        strokeColor: progressBarColorMap.green,
+        trailColor: progressBarColorMap.white
     };
 };
 

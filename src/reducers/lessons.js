@@ -1,34 +1,34 @@
 import { fromJS, List } from 'immutable';
 
 import {
-    FETCH_TASKS_REQUEST,
-    FETCH_TASKS_SUCCESS,
-    FETCH_TASKS_FAILURE
+    FETCH_LESSONS_REQUEST,
+    FETCH_LESSONS_SUCCESS,
+    FETCH_LESSONS_FAILURE
 } from '../actions';
 
-const tasksInitialState = fromJS({
+const lessonsInitialState = fromJS({
     items: [],
     isFetching: false,
     error: null
 });
 
-export default function tasks(state = tasksInitialState, action) {
+export default function lessons(state = lessonsInitialState, action) {
     switch (action.type) {
-        case FETCH_TASKS_REQUEST: {
+        case FETCH_LESSONS_REQUEST: {
             return state
                 .set('items', new List())
                 .set('isFetching', true)
                 .set('error', null);
         }
 
-        case FETCH_TASKS_SUCCESS: {
+        case FETCH_LESSONS_SUCCESS: {
             return state
-                .set('items', action.tasks)
+                .set('items', action.lessons)
                 .set('isFetching', false)
                 .set('error', null);
         }
 
-        case FETCH_TASKS_FAILURE: {
+        case FETCH_LESSONS_FAILURE: {
             return state
                 .set('items', new List())
                 .set('isFetching', false)

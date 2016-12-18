@@ -8,13 +8,19 @@ import config from './api.config.js';
 * Constants
 **/
 const tabs = {
-    reviews: 'Reviews',
-    division: 'Division',
-    points: 'Points',
-    students: 'Students',
-    mentors: 'Mentors',
-    lessons: 'Lessons',
-    tasks: 'Tasks'
+    reviews:    'Reviews',
+    division:   'Division',
+    points:     'Points',
+    students:   'Students',
+    mentors:    'Mentors',
+    lessons:    'Lessons',
+    tasks:      'Tasks'
+};
+
+const lessonTypes = {
+    lesson:     'lesson',
+    practice:   'practice',
+    qa:         'qa'
 };
 
 const RANGE_UPPER_BOUNDARY = '2000';
@@ -148,4 +154,96 @@ export const getReviews = () => getSpreadsheetTabData(tabs.reviews);
 /**
  * Lessons & Tasks
  **/
-export const getTasks = () => getSpreadsheetTabData(tabs.tasks);
+/*
+Lesson
+|
+|_<LessonOwnProps>
+|
+|_MentorGithubLogin
+|
+|_LessonNumber
+|
+|_Task_0
+|   |
+|   |_<TaskOwnProps>
+|   |
+|   |_Review
+|
+|_Task_1
+|
+...
+|
+|_Task_N
+*/
+export const getLessons = studentLogin => {
+    return new Promise((resolve, reject) => {
+        if (!studentLogin) {
+            reject('To get lessons for the student please provide student login');
+        }
+
+        const lcStudentLogin = studentLogin.toLowerCase();
+
+        Promise.all([
+            getSpreadsheetTabData(tabs.lessons),
+            getSpreadsheetTabData(tabs.division),
+            getSpreadsheetTabData(tabs.mentors),
+            getSpreadsheetTabData(tabs.tasks),
+            getReviews()
+        ]).then(
+            results => {
+                const [
+                    lessons,
+                    divisions,
+                    mentors,
+                    tasks,
+                    reviews
+                ] = results;
+
+                const studentDivision = divisions.find(division =>
+                    division.get('student').toLowerCase() === lcStudentLogin
+                );
+
+                const result = lessons
+                    .filter(lesson =>
+                        lesson.get('type').toLowerCase() === lessonTypes.lesson
+                    )
+                    .map((lesson, idx) => {
+                        const lessonNumber = idx + 1;
+
+                        return lesson
+                            .set('number', lessonNumber)
+                            .set(
+                                'mentorGithubLogin',
+                                mentors
+                                    .find(mentor =>
+                                        mentor.get('login').toLowerCase() ===
+                                        studentDivision.get(`${lessonNumber}`).toLowerCase()
+                                    )
+                                    .get('github')
+                            )
+                            .set(
+                                'tasks',
+                                tasks
+                                    .filter(task =>
+                                        Math.floor(task.get('number') / 10) === lessonNumber
+                                    )
+                                    .map(task =>
+                                        task.set(
+                                            'review',
+                                            reviews
+                                                .find(review =>
+                                                    review.get('homeworkNumber') === task.get('number')
+                                                )
+                                        )
+                                    )
+                            );
+                    });
+
+                resolve(result);
+            },
+            error => reject(error)
+        ).catch(
+            error => reject(error)
+        );
+    });
+}

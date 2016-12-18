@@ -1,7 +1,4 @@
-/*
- * Color maps
- */
-export const PROGRESS_BAR_COLOR_MAP = {
+export const progressBarColorMap = {
     white: '#FFFFFF',
     red: '#FF0000',
     yellow: '#FFA500',

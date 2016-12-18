@@ -31,7 +31,7 @@ export default class TotalScorePage extends Component {
         this.props.fetchReviews();
     }
 
-    render () {
+    render() {
         const {
             isReviewsFetching,
             userRating: {

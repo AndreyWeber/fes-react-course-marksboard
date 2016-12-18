@@ -2,7 +2,7 @@ import { setCurrentUserKey } from '../utils/session';
 import {
     getReviews,
     getStudentByKey,
-    getTasks
+    getLessons
 } from '../api';
 
 export const USER_LOGIN_REQUEST = 'USER_LOGIN_REQUEST';
@@ -13,9 +13,9 @@ export const FETCH_REVIEWS_REQUEST = 'FETCH_REVIEWS_REQUEST';
 export const FETCH_REVIEWS_SUCCESS = 'FETCH_REVIEWS_SUCCESS';
 export const FETCH_REVIEWS_FAILURE = 'FETCH_REVIEWS_FAILURE';
 
-export const FETCH_TASKS_REQUEST = 'FETCH_TASKS_REQUEST';
-export const FETCH_TASKS_SUCCESS = 'FETCH_TASKS_SUCCESS';
-export const FETCH_TASKS_FAILURE = 'FETCH_TASKS_FAILURE';
+export const FETCH_LESSONS_REQUEST = 'FETCH_LESSONS_REQUEST';
+export const FETCH_LESSONS_SUCCESS = 'FETCH_LESSONS_SUCCESS';
+export const FETCH_LESSONS_FAILURE = 'FETCH_LESSONS_FAILURE';
 
 export const userLogin = (key, loginCallback = undefined) => dispatch => {
     dispatch({
@@ -65,18 +65,18 @@ export const fetchReviews = () => dispatch => {
         }));
 };
 
-export const fetchTasks = () => dispatch => {
+export const fetchLessons = studentLogin => dispatch => {
     dispatch({
-        type: FETCH_TASKS_REQUEST
+        type: FETCH_LESSONS_REQUEST
     });
 
-    getTasks()
-        .then(tasks => dispatch({
-            type: FETCH_TASKS_SUCCESS,
-            tasks
+    getLessons(studentLogin)
+        .then(lessons => dispatch({
+            type: FETCH_LESSONS_SUCCESS,
+            lessons
         }))
         .catch(error => dispatch({
-            type: FETCH_TASKS_FAILURE,
+            type: FETCH_LESSONS_FAILURE,
             error
         }));
 };

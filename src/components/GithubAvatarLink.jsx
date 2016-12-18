@@ -10,7 +10,10 @@ const GithubAvatarLink = ({
     width = 25,
     tooltipPosition
 }) => (
-    <Tooltip position={tooltipPosition} text={githubLogin}>
+    <Tooltip
+        position={tooltipPosition}
+        text={githubLogin}
+    >
         <a
             href={`${GITHUB_URL}${githubLogin}`}
             target="_blank"
