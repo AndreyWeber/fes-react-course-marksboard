@@ -21,6 +21,7 @@ const PullRequestIcon = ({pullRequestUrl = '', size = 14, tooltipPosition}) => (
                         <GitPullRequest
                             className={styles.iconEnabled}
                             size={size}
+                            style={{color: '#FFFFFF'}}
                         />
                     </a>
                 )

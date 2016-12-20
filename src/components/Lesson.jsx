@@ -1,28 +1,28 @@
-// external libs
 import React, { Component, PropTypes } from 'react';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 
-// my libs (utils, actions)
-
-// external components
 import { Collapse } from 'react-bootstrap';
 
-// my components
 import Task from './Task.jsx';
 import ScoreProgressBar from './ScoreProgressBar.jsx';
 import GithubAvatarLink from './GithubAvatarLink.jsx';
 
-// styles
 import styles from './Lesson.less';
 
-// constants
 import { progressBarColorMap } from '../constants';
 
 export default class Lesson extends Component {
     static propTypes = {
+        children: ImmutablePropTypes.listOf(
+            ImmutablePropTypes.map
+        ),
         collapse: PropTypes.bool,
-        mentorLogin: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-        number: PropTypes.string.isRequired
+        maxScore: PropTypes.number.isRequired,
+        mentorGithubLogin: PropTypes.string.isRequired,
+        mentorName: PropTypes.string.isRequired,
+        number: PropTypes.number.isRequired,
+        score: PropTypes.number.isRequired,
+        topic: PropTypes.string.isRequired
     };
 
     state = {
@@ -35,29 +35,34 @@ export default class Lesson extends Component {
 
     render() {
         const {
-            mentorLogin,
-            name,
-            number
+            children,
+            maxScore,
+            mentorName,
+            mentorGithubLogin,
+            number,
+            score,
+            topic
         } = this.props;
 
         return (
             <div className={styles.root}>
                 <div className={styles.header}>
                     <GithubAvatarLink
-                        githubLogin={mentorLogin}
+                        githubLogin={mentorGithubLogin}
+                        name={mentorName}
                         tooltipPosition="left"
                     />
                     <div
                         className={styles.headerText}
                         onClick={this.collapseSelf}
                     >
-                        <div>{`Lesson ${number} - ${name}`}</div>
-                        <div>5/6</div>
+                        <div>{`Lesson ${number} - ${topic}`}</div>
+                        <div>{`${score}/${maxScore}`}</div>
                     </div>
                 </div>
                 <div className={styles.lessonScoreProgress}>
                     <ScoreProgressBar
-                        percent={500/6}
+                        percent={(score * 100) / maxScore}
                         strokeColor={progressBarColorMap.green}
                         tooltipPosition="none"
                         trailColor={progressBarColorMap.white}
@@ -65,12 +70,18 @@ export default class Lesson extends Component {
                 </div>
                 <Collapse in={!this.state.collapse}>
                     <div>
-                        <Task checkDate="06.12.2016 22:23:44" name="Little tasks about arrays" pointsMax={1} />
-                        {/*<Task mark={1} name="Some very very very very long task name. Really long. Indeed. Much longer then you can imagine." pointsMax={1} />*/}
-                        <Task mark={11} name="Little tasks about arrays" pointsMax={20} />
-                        <Task mark={1} name="Little tasks about arrays" pointsMax={1} />
-                        <Task mark={0} name="Little tasks about arrays"  pointsMax={1} />
-                        <Task mark={1} name="Little tasks about arrays"  pointsMax={1} />
+                        {
+                            children.map(task =>
+                                <Task
+                                    key={task.get('number')}
+                                    maxScore={task.get('maxScore')}
+                                    name={task.get('name')}
+                                    prUrl={task.get('prUrl')}
+                                    score={task.get('score')}
+                                    timestamp={task.get('timestamp')}
+                                />
+                            )
+                        }
                     </div>
                 </Collapse>
             </div>

@@ -1,35 +1,39 @@
-// external libs
 import React from 'react';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 
-// my libs (utils, actions)
-
-// external components
-
-// my components
 import Lesson from './Lesson.jsx';
 
-// styles
 import styles from './Lessons.less';
 
-// constants
-
-const Lessons = () => (
-    <div className={styles.root}>
-        <div className={styles.lessons}>
-            <Lesson
-                mentorLogin="krambertech"
-                name="Introduction"
-                number="1"
-            />
-            <Lesson
-                mentorLogin="krambertech"
-                name="Introduction"
-                number="1"
-            />
+const Lessons = props => {
+    return (
+        <div className={styles.root}>
+            <div className={styles.lessons}>
+                {
+                    props.children.map((lesson, idx) =>
+                        <Lesson
+                            collapse={idx !== 0}
+                            key={lesson.get('number')}
+                            maxScore={lesson.get('maxScore')}
+                            mentorGithubLogin={lesson.get('mentorGithubLogin')}
+                            mentorName={lesson.get('mentorName')}
+                            number={lesson.get('number')}
+                            score={lesson.get('score')}
+                            topic={lesson.get('topic')}
+                        >
+                            {lesson.get('tasks')}
+                        </Lesson>
+                    )
+                }
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
-//Lessons.propTypes = {};
+Lessons.propTypes = {
+    children: ImmutablePropTypes.listOf(
+        ImmutablePropTypes.map.isRequired
+    ).isRequired
+};
 
 export default Lessons;

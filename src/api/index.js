@@ -210,16 +210,24 @@ export const getLessons = studentLogin => {
                     .map((lesson, idx) => {
                         const lessonNumber = idx + 1;
 
+                        const mentor = mentors.find(mentor =>
+                            mentor.get('login').toLowerCase() ===
+                            studentDivision.get(`${lessonNumber}`).toLowerCase()
+                        );
+
                         return lesson
                             .set('number', lessonNumber)
                             .set(
                                 'mentorGithubLogin',
-                                mentors
-                                    .find(mentor =>
-                                        mentor.get('login').toLowerCase() ===
-                                        studentDivision.get(`${lessonNumber}`).toLowerCase()
-                                    )
+                                mentor
                                     .get('github')
+                                    .trim()
+                            )
+                            .set(
+                                'mentorName',
+                                mentor
+                                    .get('name')
+                                    .trim()
                             )
                             .set(
                                 'tasks',
@@ -246,4 +254,4 @@ export const getLessons = studentLogin => {
             error => reject(error)
         );
     });
-}
+};

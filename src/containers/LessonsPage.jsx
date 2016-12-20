@@ -1,9 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 
 // my libs (utils, actions)
 import { fetchLessons } from '../actions';
-import { isLessonsFetching } from '../selectors/lessons';
+import { getUserLogin } from '../selectors/user';
+import {
+    isLessonsFetching,
+    getLessonItems
+} from '../selectors/lessons';
 
 // external components
 
@@ -19,17 +24,21 @@ import Lessons from '../components/Lessons.jsx';
 export default class LessonsPage extends Component {
     static propTypes = {
         fetchLessons: PropTypes.func.isRequired,
-        isTasksFetching: PropTypes.bool.isRequired
+        isLessonsFetching: PropTypes.bool.isRequired,
+        lessonItems: ImmutablePropTypes.list.isRequired,
+        userLogin: PropTypes.string.isRequired
     };
 
     componentWillMount() {
-        this.props.fetchLessons('alexpoltava');
+        this.props.fetchLessons(this.props.userLogin);
     }
 
     render() {
         return (
-            <Loader loading={this.props.isTasksFetching}>
-                <Lessons />
+            <Loader loading={this.props.isLessonsFetching}>
+                <Lessons>
+                    {this.props.lessonItems}
+                </Lessons>
             </Loader>
         );
     }
@@ -37,6 +46,8 @@ export default class LessonsPage extends Component {
 
 function mapStateToProps(state) {
     return {
-        isTasksFetching: isLessonsFetching(state)
+        isLessonsFetching: isLessonsFetching(state),
+        lessonItems: getLessonItems(state),
+        userLogin: getUserLogin(state)
     };
 }

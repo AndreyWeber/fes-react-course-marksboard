@@ -7,12 +7,13 @@ const GITHUB_URL = 'https://github.com/';
 const GithubAvatarLink = ({
     githubLogin,
     height = 25,
+    name,
     width = 25,
     tooltipPosition
 }) => (
     <Tooltip
         position={tooltipPosition}
-        text={githubLogin}
+        text={name}
     >
         <a
             href={`${GITHUB_URL}${githubLogin}`}
@@ -33,6 +34,7 @@ const GithubAvatarLink = ({
 GithubAvatarLink.propTypes = {
     githubLogin: PropTypes.string.isRequired,
     height: PropTypes.number,
+    name: PropTypes.string.isRequired,
     tooltipPosition: PropTypes.string.isRequired,
     width: PropTypes.number
 };

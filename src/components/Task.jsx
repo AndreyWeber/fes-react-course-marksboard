@@ -37,11 +37,7 @@ const getProgressBarProps = percent => {
 };
 
 const Task = props => {
-    const mark = props.mark === undefined || props.mark === null
-        ? 0
-        : props.mark;
-
-    const completePercent = (mark * 100) / props.pointsMax;
+    const completePercent = Math.floor((props.score * 100) / props.maxScore);
 
     const progressBarProps = getProgressBarProps(completePercent);
 
@@ -51,18 +47,18 @@ const Task = props => {
                 <div className={styles.taskName}>
                     {props.name}
                 </div>
-                <div className={styles.taskCheckDate}>
-                    {`${props.checkDate || 'N/A'}`}
+                <div className={styles.taskTimestamp}>
+                    {`${props.timestamp || 'N/A'}`}
                 </div>
                 <div className={styles.taskScore}>
-                    {`${mark}/${props.pointsMax}`}
+                    {`${props.score}/${props.maxScore}`}
                 </div>
             </div>
 
             <div className={styles.footer}>
-                <div className={styles.taskIcon}>
+                <div className={styles.taskPullRequestIcon}>
                     <PullRequestIcon
-                        pullRequestUrl={props.pullRequestUrl}
+                        pullRequestUrl={props.prUrl}
                         size={22}
                         tooltipPosition="left"
                     />
@@ -82,11 +78,11 @@ const Task = props => {
 };
 
 Task.propTypes = {
-    checkDate: PropTypes.string,
-    mark: PropTypes.number,
+    maxScore: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
-    pointsMax: PropTypes.number.isRequired,
-    pullRequestUrl: PropTypes.string
+    prUrl: PropTypes.string,
+    score: PropTypes.number.isRequired,
+    timestamp: PropTypes.string
 };
 
 export default Task;
