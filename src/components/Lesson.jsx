@@ -44,6 +44,7 @@ export default class Lesson extends Component {
             topic
         } = this.props;
 
+        const percentage = Math.floor((score * 100) / maxScore);
         return (
             <div className={styles.root}>
                 <div className={styles.header}>
@@ -62,9 +63,10 @@ export default class Lesson extends Component {
                 </div>
                 <div className={styles.lessonScoreProgress}>
                     <ScoreProgressBar
-                        percent={(score * 100) / maxScore}
+                        percent={percentage}
                         strokeColor={progressBarColorMap.green}
-                        tooltipPosition="none"
+                        tooltipPosition="right"
+                        tooltipText={`Finished on ${percentage}%`}
                         trailColor={progressBarColorMap.white}
                     />
                 </div>

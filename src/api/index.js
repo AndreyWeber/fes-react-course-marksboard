@@ -120,8 +120,19 @@ function getSpreadsheetTabData(tabName) {
 /**
  * Students
  **/
+
+/**
+ * Get list of students from Google spreadsheet 'Students' tab
+ */
 export const getStudents = () => getSpreadsheetTabData(tabs.students);
 
+/**
+ * Get Student from Google spreadsheet 'Students' tab
+ * by any student id (Key, Login, etc)
+ * @param {String} id - Student id value
+ * @param {String} idName - Student id name
+ * @returns {Promise}
+ */
 export function getStudent(id, idName) {
     return new Promise((resolve, reject) => {
         if (!id) {
@@ -144,11 +155,19 @@ export function getStudent(id, idName) {
     });
 }
 
+/**
+ * Get Student from Google spreadsheet 'Students' tab by Key id
+ * @param {String} key - student Key id value
+ */
 export const getStudentByKey = key => getStudent(key, 'key');
 
 /**
  * Reviews
  **/
+
+/**
+ * Get Reviews from Google spreadsheet 'Reviews' tab
+ */
 export const getReviews = () => getSpreadsheetTabData(tabs.reviews);
 
 /**
@@ -160,6 +179,8 @@ Lesson
 |_<LessonOwnProps>
 |
 |_MentorGithubLogin
+|
+|_MentorName
 |
 |_LessonNumber
 |
@@ -175,6 +196,12 @@ Lesson
 |
 |_Task_N
 */
+/**
+ * Get data about Student homeworks progress from Google
+ * spreadsheet 'Students' tab by student login
+ * @param {String} studentLogin - student login
+ * @returns {Promise}
+ */
 export const getLessons = studentLogin => {
     return new Promise((resolve, reject) => {
         if (!studentLogin) {
