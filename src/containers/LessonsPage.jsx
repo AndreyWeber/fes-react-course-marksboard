@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
-// my libs (utils, actions)
 import { fetchLessons } from '../actions';
 import { getUserLogin } from '../selectors/user';
 import {
@@ -10,15 +9,9 @@ import {
     getLessonItems
 } from '../selectors/lessons';
 
-// external components
-
-// my components
 import Loader from '../components/Loader.jsx';
 import Lessons from '../components/Lessons.jsx';
-
-// styles
-
-// constants
+import NavigationBar from '../components/NavigationBar.jsx';
 
 @connect(mapStateToProps, { fetchLessons })
 export default class LessonsPage extends Component {
@@ -36,6 +29,7 @@ export default class LessonsPage extends Component {
     render() {
         return (
             <Loader loading={this.props.isLessonsFetching}>
+                <NavigationBar />
                 <Lessons>
                     {this.props.lessonItems}
                 </Lessons>

@@ -11,6 +11,7 @@ import { getUserName, getUserLogin } from '../selectors/user';
 
 import Loader from '../components/Loader.jsx';
 import TotalScore from '../components/TotalScore.jsx';
+import NavigationBar from '../components/NavigationBar.jsx';
 
 const SHOW_CONGRATS_RATING_UPPER_BOUND = 10;
 
@@ -44,6 +45,7 @@ export default class TotalScorePage extends Component {
 
         return (
             <Loader loading={isReviewsFetching}>
+                <NavigationBar />
                 <TotalScore
                     competitorsCount={competitorsCount}
                     ratingValue={ratingValue}
