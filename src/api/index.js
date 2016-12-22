@@ -267,7 +267,8 @@ export const getLessons = studentLogin => {
                                             'review',
                                             reviews
                                                 .find(review =>
-                                                    review.get('homeworkNumber') === task.get('number')
+                                                    review.get('homeworkNumber') === task.get('number') &&
+                                                    review.get('student').trim().toLowerCase() === lcStudentLogin
                                                 )
                                         )
                                     )
