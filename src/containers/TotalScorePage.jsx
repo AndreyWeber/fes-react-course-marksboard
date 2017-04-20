@@ -2,12 +2,10 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchReviews } from '../actions';
-import {
-    isReviewsFetching,
-    getStudentTotalScore,
-    getStudentRating
-} from '../selectors/reviews';
+import { getCurrentSpreadsheetName } from '../utils/session';
+import { isReviewsFetching, getStudentTotalScore, getStudentRating } from '../selectors/reviews';
 import { getUserName, getUserLogin } from '../selectors/user';
+import { getSpreadsheetNameFromQuery } from '../selectors/routing';
 
 import Loader from '../components/Loader.jsx';
 import TotalScore from '../components/TotalScore.jsx';
@@ -20,6 +18,7 @@ export default class TotalScorePage extends Component {
     static propTypes = {
         fetchReviews: PropTypes.func.isRequired,
         isReviewsFetching: PropTypes.bool.isRequired,
+        spreadsheetName: PropTypes.string,
         totalScore: PropTypes.number.isRequired,
         userName: PropTypes.string.isRequired,
         userRating: PropTypes.shape({
@@ -29,7 +28,12 @@ export default class TotalScorePage extends Component {
     };
 
     componentWillMount() {
-        this.props.fetchReviews();
+        const {
+            fetchReviews,
+            spreadsheetName
+        } = this.props;
+
+        fetchReviews(spreadsheetName);
     }
 
     render() {
@@ -59,10 +63,12 @@ export default class TotalScorePage extends Component {
 }
 
 function mapStateToProps(state) {
+    // TODO: Refactor selectors: getUserLogin and getStudentTotalScore should be composed
     const login = getUserLogin(state);
 
     return {
         isReviewsFetching: isReviewsFetching(state),
+        spreadsheetName: getCurrentSpreadsheetName() || getSpreadsheetNameFromQuery(state),
         totalScore: getStudentTotalScore(state, login),
         userName: getUserName(state),
         userRating: getStudentRating(state, login)

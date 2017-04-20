@@ -1,14 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { replace } from 'react-router-redux';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import { userLogin } from '../actions';
-import {
-    getLoginError,
-    isLoggedIn,
-    isLoggingIn
-} from '../selectors/login';
-import { getLocationState } from '../selectors/routing';
+import { getLoginError, isLoggedIn, isLoggingIn } from '../selectors/login';
+import { getLocationState, getQuery, getSpreadsheetNameFromQuery } from '../selectors/routing';
 
 import Login from '../components/Login.jsx';
 import Loader from '../components/Loader.jsx';
@@ -25,7 +22,9 @@ export default class LoginPage extends Component {
             nextQuery: PropTypes.object
         }),
         loginError: PropTypes.string,
+        query: ImmutablePropTypes.map.isRequired,
         replace: PropTypes.func.isRequired,
+        spreadsheetName: PropTypes.string,
         userLogin: PropTypes.func.isRequired
     };
 
@@ -51,14 +50,22 @@ export default class LoginPage extends Component {
     }
 
     setLocation(locationState) {
+        const {
+            query,
+            replace
+        } = this.props;
+
         if (locationState) {
-            this.props.replace({
+            // This branch will be called if not logged-in user
+            // will try to open some page other then login page
+            replace({
                 pathname: locationState.get('nextPathname'),
                 query: locationState.get('nextQuery').toJS()
             });
         } else {
-            this.props.replace({
-                pathname: NEXT_PATHNAME_DEFAULT
+            replace({
+                pathname: NEXT_PATHNAME_DEFAULT,
+                query: query.toJS()
             });
         }
     }
@@ -67,6 +74,7 @@ export default class LoginPage extends Component {
         const {
             loginError,
             isLoggingIn,
+            spreadsheetName,
             userLogin
         } = this.props;
 
@@ -74,6 +82,7 @@ export default class LoginPage extends Component {
             <Loader loading={isLoggingIn}>
                 <Login
                     error={loginError}
+                    spreadsheetName={spreadsheetName}
                     onLogin={userLogin}
                 />
             </Loader>
@@ -82,12 +91,12 @@ export default class LoginPage extends Component {
 }
 
 function mapStateToProps(state) {
-    const locationState = getLocationState(state);
-
     return {
         loginError: getLoginError(state),
         isLoggedIn: isLoggedIn(state),
         isLoggingIn: isLoggingIn(state),
-        locationState: locationState
+        locationState: getLocationState(state),
+        query: getQuery(state),
+        spreadsheetName: getSpreadsheetNameFromQuery(state)
     };
 }

@@ -4,9 +4,9 @@ import camelCase from 'camel-case';
 
 import config from './api.config.js';
 
-/**
-* Constants
-**/
+/************
+ * Constants
+ ************/
 const tabs = {
     reviews:    'Reviews',
     division:   'Division',
@@ -27,16 +27,40 @@ const RANGE_UPPER_BOUNDARY = '2000';
 const HEADER_RANGE = '1:1';
 const DATA_RANGE = `2:${RANGE_UPPER_BOUNDARY}`;
 
+// TODO: Re-factor: convert funtions to lambda expressions ?
+// TODO: Re-factor: refine error messages, which can be shown on UI
+
 /*****************
  * Helper methods
  *****************/
+const getSpreadsheetIdByName = name => {
+    if (!name || name === '') {
+        throw new Error('Please provide Google spreadsheet name URL parameter');
+    }
+
+    const spreadsheet = config.availableSpreadsheets
+        .find(ss => ss.name.toLowerCase() === name.toLowerCase());
+    if (spreadsheet) {
+        return spreadsheet.id;
+    }
+
+    throw new Error(`No Google spreadsheet named ${name} found`);
+};
+
 function initGapi() {
+    const {
+        apiKey,
+        discoveryUrl,
+        clientId,
+        scope
+    } = config.commonCredentials;
+
     return gapi.client.init({
-        apiKey: config.apiKey,
-        discoveryDocs: [config.discoveryUrl],
+        apiKey: apiKey,
+        discoveryDocs: [discoveryUrl],
         // clientId and scope are optional if auth is not required.
-        clientId: config.clientId,
-        scope: config.scope
+        clientId: clientId,
+        scope: scope
     });
     //.then(() => {});
 }
@@ -63,7 +87,7 @@ const batchGet = params => initGapi().then(() =>
 
 function toListOfMaps(rows, tabName) {
     if (!rows) {
-        throw new Error(`Provided '${tabName}' tab rows list is empty`);
+        throw new Error(`Provided rows list for tab '${tabName}' is empty`);
     }
 
     const {
@@ -86,11 +110,19 @@ function toListOfMaps(rows, tabName) {
     );
 }
 
-function getSpreadsheetTabData(tabName) {
+function getSpreadsheetTabData(spreadsheetName, tabName) {
     return new Promise((resolve, reject) => {
+        if (!tabName || tabName === '') {
+            reject(new Error('Spreadsheet tab name is undefined or empty'));
+        }
+
+        // Error synchronously created by calling functions will be
+        // treated as reject() call
+        const spreadsheetId = getSpreadsheetIdByName(spreadsheetName);
+
         const callApi = () => {
             batchGet({
-                spreadsheetId: config.spreadsheetId,
+                spreadsheetId: spreadsheetId,
                 majorDimension: 'ROWS',
                 ranges: [
                     `${tabName}!${HEADER_RANGE}`,
@@ -100,12 +132,12 @@ function getSpreadsheetTabData(tabName) {
                 response => {
                     try {
                         resolve(toListOfMaps(response, tabName));
-                    } catch(error) {
+                    } catch (error) {
                         reject(error);
                     }
                 },
                 // Process error response
-                response => reject(response.result.error.message)
+                response => reject(response.result.error)
             );
         };
 
@@ -123,23 +155,30 @@ function getSpreadsheetTabData(tabName) {
 
 /**
  * Get list of students from Google spreadsheet 'Students' tab
+ * @param {String} spreadsheetName - Name of Google spreadsheet to fetch data from
  */
-export const getStudents = () => getSpreadsheetTabData(tabs.students);
+export const getStudents = spreadsheetName =>
+    getSpreadsheetTabData(spreadsheetName, tabs.students);
 
 /**
- * Get Student from Google spreadsheet 'Students' tab
- * by any student id (Key, Login, etc)
+ * Get a Student from Google spreadsheet 'Students' tab by any of
+ * student's ids (Key, Login, etc)
+ * @param {String} spreadsheetName - Name of Google spreadsheet to fetch data from
  * @param {String} id - Student id value
  * @param {String} idName - Student id name
  * @returns {Promise}
  */
-export function getStudent(id, idName) {
+export function getStudent(spreadsheetName, id, idName) {
     return new Promise((resolve, reject) => {
-        if (!id) {
-            reject(`Please provide your ${idName}`);
+        if (!idName) {
+            reject(new Error('Please provide your Id name'));
         }
 
-        getStudents()
+        if (!id) {
+            reject(new Error(`Please provide your ${idName} value`));
+        }
+
+        getStudents(spreadsheetName)
             .then(result => {
                 const user = result.find(student =>
                     student.get(idName).trim() === id.trim()
@@ -148,18 +187,22 @@ export function getStudent(id, idName) {
                 if (user) {
                     resolve(user);
                 } else {
-                    reject(`User with ${idName} "${id}" not found`);
+                    reject(new Error(`User with ${idName} "${id}" not found in the spreadsheet "${spreadsheetName}"`));
                 }
             })
-            .catch(error => reject(error));
+            .catch(
+                error => reject(error)
+            );
     });
 }
 
 /**
- * Get Student from Google spreadsheet 'Students' tab by Key id
+ * Get Student from Google spreadsheet 'Students' tab by 'Key' id
+ * @param {String} spreadsheetName - Name of Google spreadsheet to fetch data from
  * @param {String} key - student Key id value
  */
-export const getStudentByKey = key => getStudent(key, 'key');
+export const getStudentByKey = (spreadsheetName, key) =>
+    getStudent(spreadsheetName, key, 'key');
 
 /**
  * Reviews
@@ -167,8 +210,10 @@ export const getStudentByKey = key => getStudent(key, 'key');
 
 /**
  * Get Reviews from Google spreadsheet 'Reviews' tab
+ * @param {String} spreadsheetName - Name of Google spreadsheet to fetch data from
  */
-export const getReviews = () => getSpreadsheetTabData(tabs.reviews);
+export const getReviews = spreadsheetName =>
+    getSpreadsheetTabData(spreadsheetName, tabs.reviews);
 
 /**
  * Lessons & Tasks
@@ -197,25 +242,26 @@ Lesson
 |_Task_N
 */
 /**
- * Get data about Student homeworks progress from Google
+ * Get data about Student home works progress from Google
  * spreadsheet 'Students' tab by student login
+ * @param {String} spreadsheetName - Name of Google spreadsheet to fetch data from
  * @param {String} studentLogin - student login
  * @returns {Promise}
  */
-export const getLessons = studentLogin => {
+export const getLessons = (spreadsheetName, studentLogin) => {
     return new Promise((resolve, reject) => {
         if (!studentLogin) {
-            reject('To get lessons for the student please provide student login');
+            reject(new Error("Please provide student's login to get lessons for the student"));
         }
 
         const lcStudentLogin = studentLogin.toLowerCase();
 
         Promise.all([
-            getSpreadsheetTabData(tabs.lessons),
-            getSpreadsheetTabData(tabs.division),
-            getSpreadsheetTabData(tabs.mentors),
-            getSpreadsheetTabData(tabs.tasks),
-            getReviews()
+            getSpreadsheetTabData(spreadsheetName, tabs.lessons),
+            getSpreadsheetTabData(spreadsheetName, tabs.division),
+            getSpreadsheetTabData(spreadsheetName, tabs.mentors),
+            getSpreadsheetTabData(spreadsheetName, tabs.tasks),
+            getReviews(spreadsheetName)
         ]).then(
             results => {
                 const [
@@ -260,6 +306,7 @@ export const getLessons = studentLogin => {
                                 'tasks',
                                 tasks
                                     .filter(task =>
+                                        // Calculate tasks which are belongs to the current lesson
                                         Math.floor(task.get('number') / 10) === lessonNumber
                                     )
                                     .map(task =>
@@ -276,8 +323,7 @@ export const getLessons = studentLogin => {
                     });
 
                 resolve(result);
-            },
-            error => reject(error)
+            }
         ).catch(
             error => reject(error)
         );

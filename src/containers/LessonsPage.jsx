@@ -3,11 +3,10 @@ import { connect } from 'react-redux';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import { fetchLessons } from '../actions';
+import { getCurrentSpreadsheetName } from '../utils/session';
 import { getUserLogin } from '../selectors/user';
-import {
-    isLessonsFetching,
-    getLessonItems
-} from '../selectors/lessons';
+import { isLessonsFetching, getLessonItems } from '../selectors/lessons';
+import { getSpreadsheetNameFromQuery } from '../selectors/routing';
 
 import Loader from '../components/Loader.jsx';
 import Lessons from '../components/Lessons.jsx';
@@ -19,11 +18,18 @@ export default class LessonsPage extends Component {
         fetchLessons: PropTypes.func.isRequired,
         isLessonsFetching: PropTypes.bool.isRequired,
         lessonItems: ImmutablePropTypes.list.isRequired,
+        spreadsheetName: PropTypes.string,
         userLogin: PropTypes.string.isRequired
     };
 
     componentWillMount() {
-        this.props.fetchLessons(this.props.userLogin);
+        const {
+            fetchLessons,
+            spreadsheetName,
+            userLogin
+        } = this.props;
+
+        fetchLessons(spreadsheetName, userLogin);
     }
 
     render() {
@@ -42,6 +48,7 @@ function mapStateToProps(state) {
     return {
         isLessonsFetching: isLessonsFetching(state),
         lessonItems: getLessonItems(state),
+        spreadsheetName: getCurrentSpreadsheetName() || getSpreadsheetNameFromQuery(state),
         userLogin: getUserLogin(state)
     };
 }

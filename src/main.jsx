@@ -8,7 +8,8 @@ import routes from './routes.jsx';
 import configureStore from './store';
 
 import { userLogin } from './actions';
-import { getCurrentUserKey } from './utils/session';
+import { getCurrentUserKey, getCurrentSpreadsheetName } from './utils/session';
+import { getSpreadsheetNameFromQuery } from './selectors/routing';
 
 import 'normalize.css';
 import './assets/main.less';
@@ -34,8 +35,10 @@ function renderApp() {
 
 function startApp() {
     const userKey = getCurrentUserKey();
-    if (userKey) {
-        store.dispatch(userLogin(userKey, renderApp));
+    const spreadsheetName = getCurrentSpreadsheetName() ||
+        getSpreadsheetNameFromQuery(store.getState());
+    if (userKey && spreadsheetName) {
+        store.dispatch(userLogin(spreadsheetName, userKey, renderApp));
     } else {
         renderApp();
     }

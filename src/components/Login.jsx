@@ -13,6 +13,7 @@ const ENTER_KEY = 13;
 export default class Login extends Component {
     static propTypes = {
         error: PropTypes.string,
+        spreadsheetName: PropTypes.string,
         onLogin: PropTypes.func.isRequired
     };
 
@@ -31,13 +32,23 @@ export default class Login extends Component {
     };
 
     handleKeyDownOnLoginInput = event => {
+        const {
+            spreadsheetName,
+            onLogin
+        } = this.props;
+
         if (event.keyCode === ENTER_KEY) {
-            this.props.onLogin(this.state.login);
+            onLogin(spreadsheetName, this.state.login);
         }
     };
 
     handleLogin = () => {
-        this.props.onLogin(this.state.login);
+        const {
+            spreadsheetName,
+            onLogin
+        } = this.props;
+
+        onLogin(spreadsheetName, this.state.login);
     };
 
     render() {

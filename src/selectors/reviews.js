@@ -1,3 +1,5 @@
+// TODO: Refactor selectors
+// TODO: Add combine selectors
 import { createSelector } from 'reselect';
 
 /**
