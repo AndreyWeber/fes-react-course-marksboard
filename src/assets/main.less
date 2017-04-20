@@ -1,23 +1,41 @@
-@import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono');
+
+@import url('https://fonts.googleapis.com/css?family=Jura');
+//@import url('https://fonts.googleapis.com/css?family=Ubuntu+Condensed');
 
 /*
-* Color definitions
-*/
+ * Color definitions
+ */
 @main-text-color: #FFFFFF;
 @alternate-text-color: #EF5350;
 
-@default-bg-color: #313246;
+// #313246 - initial default bg color
+@default-bg-color: #1B1B1B;
 @total-score-bg-color: #05161C;
 
+@red-color: #FF0000;
+@yellow-color: #FFA500;
+@green-color: #008000;
+
 /*
-* Global rules
-*/
+ * Mixins & Rules
+ */
+.icon-hover-mixin(@cursor) {
+    &:hover {
+        cursor: @cursor;
+    }
+};
+
+/*
+ * Global rules
+ */
 * {
     box-sizing: border-box;
-    font-family: Share Tech Mono, Roboto, sans-serif;
+    font-family: Jura, Roboto, sans-serif;
     font-weight: 300;
+    text-shadow: 0 0 2px @main-text-color, 0 0 10px @main-text-color;
 }
 
-body {
+html, body {
+    height: 100%;
     background-color: @default-bg-color;
 }

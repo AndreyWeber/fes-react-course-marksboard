@@ -1,0 +1,14 @@
+@import '../assets/main.less';
+
+.iconActive {
+    //color: @main-text-color;
+    color: red;
+
+    .icon-hover-mixin(pointer);
+}
+
+.iconDisabled {
+    color: @main-text-color;
+
+    .icon-hover-mixin(no-drop);
+}

@@ -55,6 +55,17 @@ module.exports = {
                     'file-loader?hash=sha512&digest=hex&name=[hash].[ext]',
                     'image-webpack-loader?bypassOnDebug&optimizationLevel=7&interlaced=false'
                 ]
+            },
+            {
+                test: /(\.js|\.jsx)$/,
+                loader: 'babel-loader',
+                include: [
+                    path.resolve(__dirname, './node_modules/react-icons/fa'),
+                    path.resolve(__dirname, './node_modules/react-icons/go')
+                ],
+                query: {
+                    presets: ['es2015', 'react']
+                }
             }
         ]
     },

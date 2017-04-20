@@ -1,0 +1,68 @@
+@import '../assets/main.less';
+
+.root {
+    margin-top: 8px;
+    padding-bottom: 12px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.board() {
+    display: flex;
+    align-items: center;
+    box-shadow:
+            inset 0 -1px 0 rgba(50, 50, 50, 0.7),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.7),
+            inset 1px 0px 4px rgba(0, 0, 0, 0.9),
+            inset -1px 0px 4px rgba(0, 0, 0, 0.9),
+            0 1px 0px rgba(255, 255, 255, 0.2);
+    background: -webkit-gradient(linear, center top, center bottom,
+            color-stop(0.0, rgba(0, 0, 0, 0.7)),
+            color-stop(0.05, rgba(30, 30, 30, 0.7)),
+            color-stop(1.0, rgba(50, 50, 60, 0.7)));
+    border-radius: 3px;
+    padding: 5px 10px;
+}
+
+.taskName {
+    .board();
+
+    justify-content: flex-start;
+    width: 60%;
+}
+
+.taskTimestamp {
+    .board();
+
+    justify-content: flex-start;
+    margin-left: 6px;
+    margin-right: 6px;
+    width: 28%;
+}
+
+.taskScore {
+    .board();
+
+    justify-content: flex-end;
+    width: 12%;
+}
+
+.taskPullRequestIcon {
+    margin-top: 2px;
+    margin-left: 10px;
+}
+
+.taskScoreProgress {
+    margin-left: 20px;
+    width: 100%;
+}
+
+.footer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}

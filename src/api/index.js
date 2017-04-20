@@ -8,21 +8,28 @@ import config from './api.config.js';
 * Constants
 **/
 const tabs = {
-    reviews: 'Reviews',
-    division: 'Division',
-    points: 'Points',
-    students: 'Students',
-    mentors: 'Mentors',
-    lessons: 'Lessons',
-    tasks: 'Tasks'
+    reviews:    'Reviews',
+    division:   'Division',
+    points:     'Points',
+    students:   'Students',
+    mentors:    'Mentors',
+    lessons:    'Lessons',
+    tasks:      'Tasks'
 };
 
-const HEADER_RANGE = '1:1';
-const DATA_RANGE = '2:1000';
+const lessonTypes = {
+    lesson:     'lesson',
+    practice:   'practice',
+    qa:         'qa'
+};
 
-/**
-* Helper methods
-**/
+const RANGE_UPPER_BOUNDARY = '2000';
+const HEADER_RANGE = '1:1';
+const DATA_RANGE = `2:${RANGE_UPPER_BOUNDARY}`;
+
+/*****************
+ * Helper methods
+ *****************/
 function initGapi() {
     return gapi.client.init({
         apiKey: config.apiKey,
@@ -79,23 +86,20 @@ function toListOfMaps(rows, tabName) {
     );
 }
 
-/**
-* API methods
-**/
-export function getStudents() {
+function getSpreadsheetTabData(tabName) {
     return new Promise((resolve, reject) => {
         const callApi = () => {
             batchGet({
                 spreadsheetId: config.spreadsheetId,
                 majorDimension: 'ROWS',
                 ranges: [
-                    `${tabs.students}!${HEADER_RANGE}`,
-                    `${tabs.students}!${DATA_RANGE}`],
+                    `${tabName}!${HEADER_RANGE}`,
+                    `${tabName}!${DATA_RANGE}`]
             }).then(
                 // Process correct response
                 response => {
                     try {
-                        resolve(toListOfMaps(response, tabs.students));
+                        resolve(toListOfMaps(response, tabName));
                     } catch(error) {
                         reject(error);
                     }
@@ -109,6 +113,26 @@ export function getStudents() {
     });
 }
 
+/**************
+ * API methods
+ **************/
+
+/**
+ * Students
+ **/
+
+/**
+ * Get list of students from Google spreadsheet 'Students' tab
+ */
+export const getStudents = () => getSpreadsheetTabData(tabs.students);
+
+/**
+ * Get Student from Google spreadsheet 'Students' tab
+ * by any student id (Key, Login, etc)
+ * @param {String} id - Student id value
+ * @param {String} idName - Student id name
+ * @returns {Promise}
+ */
 export function getStudent(id, idName) {
     return new Promise((resolve, reject) => {
         if (!id) {
@@ -131,31 +155,131 @@ export function getStudent(id, idName) {
     });
 }
 
+/**
+ * Get Student from Google spreadsheet 'Students' tab by Key id
+ * @param {String} key - student Key id value
+ */
 export const getStudentByKey = key => getStudent(key, 'key');
 
-export function getReviews() {
-    return new Promise((resolve, reject) => {
-        const callApi = () => {
-            batchGet({
-                spreadsheetId: config.spreadsheetId,
-                majorDimension: 'ROWS',
-                ranges: [
-                    `${tabs.reviews}!${HEADER_RANGE}`,
-                    `${tabs.reviews}!${DATA_RANGE}`],
-            }).then(
-                // Process correct response
-                response => {
-                    try {
-                        resolve(toListOfMaps(response, tabs.reviews));
-                    } catch(error) {
-                        reject(error);
-                    }
-                },
-                // Process error response
-                response => reject(response.result.error.message)
-            );
-        };
+/**
+ * Reviews
+ **/
 
-        gapi.load('client:auth2', callApi);
+/**
+ * Get Reviews from Google spreadsheet 'Reviews' tab
+ */
+export const getReviews = () => getSpreadsheetTabData(tabs.reviews);
+
+/**
+ * Lessons & Tasks
+ **/
+/*
+Lesson
+|
+|_<LessonOwnProps>
+|
+|_MentorGithubLogin
+|
+|_MentorName
+|
+|_LessonNumber
+|
+|_Task_0
+|   |
+|   |_<TaskOwnProps>
+|   |
+|   |_Review
+|
+|_Task_1
+|
+...
+|
+|_Task_N
+*/
+/**
+ * Get data about Student homeworks progress from Google
+ * spreadsheet 'Students' tab by student login
+ * @param {String} studentLogin - student login
+ * @returns {Promise}
+ */
+export const getLessons = studentLogin => {
+    return new Promise((resolve, reject) => {
+        if (!studentLogin) {
+            reject('To get lessons for the student please provide student login');
+        }
+
+        const lcStudentLogin = studentLogin.toLowerCase();
+
+        Promise.all([
+            getSpreadsheetTabData(tabs.lessons),
+            getSpreadsheetTabData(tabs.division),
+            getSpreadsheetTabData(tabs.mentors),
+            getSpreadsheetTabData(tabs.tasks),
+            getReviews()
+        ]).then(
+            results => {
+                const [
+                    lessons,
+                    divisions,
+                    mentors,
+                    tasks,
+                    reviews
+                ] = results;
+
+                const studentDivision = divisions.find(division =>
+                    division.get('student').toLowerCase() === lcStudentLogin
+                );
+
+                const result = lessons
+                    .filter(lesson =>
+                        lesson.get('type').toLowerCase() === lessonTypes.lesson
+                    )
+                    .map((lesson, idx) => {
+                        const lessonNumber = idx + 1;
+
+                        const mentor = mentors.find(mentor =>
+                            mentor.get('login').toLowerCase() ===
+                            studentDivision.get(`${lessonNumber}`).toLowerCase()
+                        );
+
+                        return lesson
+                            .set('number', lessonNumber)
+                            .set(
+                                'mentorGithubLogin',
+                                mentor
+                                    .get('github')
+                                    .trim()
+                            )
+                            .set(
+                                'mentorName',
+                                mentor
+                                    .get('name')
+                                    .trim()
+                            )
+                            .set(
+                                'tasks',
+                                tasks
+                                    .filter(task =>
+                                        Math.floor(task.get('number') / 10) === lessonNumber
+                                    )
+                                    .map(task =>
+                                        task.set(
+                                            'review',
+                                            reviews
+                                                .find(review =>
+                                                    review.get('homeworkNumber') === task.get('number') &&
+                                                    review.get('student').trim().toLowerCase() === lcStudentLogin
+                                                )
+                                        )
+                                    )
+                            );
+                    });
+
+                resolve(result);
+            },
+            error => reject(error)
+        ).catch(
+            error => reject(error)
+        );
     });
-}
+};

@@ -1,0 +1,35 @@
+@import '../assets/main.less';
+
+.root {
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    padding: 5px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: darken(@main-text-color, 60%) darken(@main-text-color, 75%);
+    border-radius: 3px;
+}
+
+.header {
+    display: flex;
+    justify-content: flex-start;
+    text-transform: uppercase;
+    font-size: 18px;
+}
+
+.headerText {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-left: 10px;
+    margin-top: 2px;
+    cursor: pointer;
+}
+
+.lessonScoreProgress {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    margin-top: 5px;
+}
