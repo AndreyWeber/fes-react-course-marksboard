@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { fetchReviews } from '../actions';
 import { getCurrentSpreadsheetName } from '../utils/session';
 import { isReviewsFetching, getStudentTotalScore, getStudentRating } from '../selectors/reviews';
-import { getUserName, getUserLogin } from '../selectors/user';
+import { getUserName } from '../selectors/user';
 import { getSpreadsheetNameFromQuery } from '../selectors/routing';
 
 import Loader from '../components/Loader.jsx';
@@ -63,14 +63,11 @@ export default class TotalScorePage extends Component {
 }
 
 function mapStateToProps(state) {
-    // TODO: Refactor selectors: getUserLogin and getStudentTotalScore should be composed
-    const login = getUserLogin(state);
-
     return {
         isReviewsFetching: isReviewsFetching(state),
         spreadsheetName: getCurrentSpreadsheetName() || getSpreadsheetNameFromQuery(state),
-        totalScore: getStudentTotalScore(state, login),
+        totalScore: getStudentTotalScore(state),
         userName: getUserName(state),
-        userRating: getStudentRating(state, login)
+        userRating: getStudentRating(state)
     };
 }
