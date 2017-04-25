@@ -2,12 +2,12 @@ import { createSelector } from 'reselect';
 import { Map } from 'immutable';
 
 /**
- * Helper methods
+ * Private selectors
  **/
 const getLessons = state => state.get('lessons');
 
 /**
- * Public methods
+ * Public selectors
  **/
 export const getLessonItems = createSelector(
     getLessons,

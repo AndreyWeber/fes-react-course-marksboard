@@ -31,7 +31,7 @@ const getStudentRatingsTable = state => (
 );
 
 /**
-* Public methods
+* Public selectors
 **/
 export const isReviewsFetching = createSelector(
     getReviews,

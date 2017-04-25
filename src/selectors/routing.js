@@ -2,6 +2,9 @@ import { createSelector } from 'reselect';
 
 const SPREADSHEET_NAME_QUERY_PARAM = 'ssname';
 
+/**
+ * Public selectors
+ */
 export const getLocation = state =>
     state.getIn(['routing', 'locationBeforeTransitions']);
 

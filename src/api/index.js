@@ -27,15 +27,17 @@ const RANGE_UPPER_BOUNDARY = '2000';
 const HEADER_RANGE = '1:1';
 const DATA_RANGE = `2:${RANGE_UPPER_BOUNDARY}`;
 
-// TODO: Re-factor: convert funtions to lambda expressions ?
-// TODO: Re-factor: refine error messages, which can be shown on UI
-
 /*****************
  * Helper methods
  *****************/
+/**
+ * Get Google spreadsheet Id by its name from configuration
+ * @param {String} name - Google spreadsheet name
+ * @returns {String}
+ */
 const getSpreadsheetIdByName = name => {
     if (!name || name === '') {
-        throw new Error('Please provide Google spreadsheet name URL parameter');
+        throw new Error("Please provide Google spreadsheet name as 'ssname' URL parameter");
     }
 
     const spreadsheet = config.availableSpreadsheets
@@ -44,10 +46,15 @@ const getSpreadsheetIdByName = name => {
         return spreadsheet.id;
     }
 
-    throw new Error(`No Google spreadsheet named ${name} found`);
+    throw new Error(`Google spreadsheet named '${name}' not found`);
 };
 
-function initGapi() {
+/**
+ * Initialize and return instance of Google API object.
+ * Scope is restricted by Google Spreadsheet API
+ * @returns {Object}
+ */
+const initGapi = () => {
     const {
         apiKey,
         discoveryUrl,
@@ -63,14 +70,25 @@ function initGapi() {
         scope: scope
     });
     //.then(() => {});
-}
-
-const wrapWithSignIn = (method, params) => {
-    return gapi.auth2.getAuthInstance().isSignedIn.get()
-        ? method(params)
-        : gapi.auth2.getAuthInstance().signIn().then(() => method(params));
 };
 
+/**
+ * Wrap call to Google API with sign in method call
+ * @param {Function} method - callback which should be wrapped with sign in call
+ * @param {Object} params - arguments of the callback
+ * @returns {void}
+ */
+const wrapWithSignIn = (method, params) => (
+    gapi.auth2.getAuthInstance().isSignedIn.get()
+        ? method(params)
+        : gapi.auth2.getAuthInstance().signIn().then(() => method(params))
+);
+
+/**
+ * Wrap Google Spreadsheet API get method with sign in call
+ * @param {Object} params - arguments of the get method
+ * @returns {Object}
+ */
 const get = params => initGapi().then(() =>
     wrapWithSignIn(
         gapi.client.sheets.spreadsheets.values.get,
@@ -78,6 +96,11 @@ const get = params => initGapi().then(() =>
     )
 );
 
+/**
+ * Wrap Google Spreadsheet API getBatch method with sign in call
+ * @param {Object} params - arguments of the getBath method
+ * @returns {Object}
+ */
 const batchGet = params => initGapi().then(() =>
     wrapWithSignIn(
         gapi.client.sheets.spreadsheets.values.batchGet,
@@ -85,7 +108,13 @@ const batchGet = params => initGapi().then(() =>
     )
 );
 
-function toListOfMaps(rows, tabName) {
+/**
+ * Converts list for Google spreadsheet tab rows to the immutable list of maps
+ * @param {Object} rows - array of Google spreadsheet rows from
+ * @param {String} tabName - name of the Google spreadsheet tab
+ * @returns {ImmutableList}
+ */
+const toListOfMaps = (rows, tabName) => {
     if (!rows) {
         throw new Error(`Provided rows list for tab '${tabName}' is empty`);
     }
@@ -108,16 +137,24 @@ function toListOfMaps(rows, tabName) {
             new Map()
         )
     );
-}
+};
 
-function getSpreadsheetTabData(spreadsheetName, tabName) {
+/**
+ * Get immutable list of maps representing rows of particular
+ * Google spreadsheet tab
+ * @param {String} spreadsheetName - name of a Google spreadsheet to fetch data from
+ * @param {String} tabName - name of a Google spreadsheet tab to fetch data from
+ * @returns {Promise}
+ */
+const getSpreadsheetTabData = (spreadsheetName, tabName) => {
     return new Promise((resolve, reject) => {
         if (!tabName || tabName === '') {
             reject(new Error('Spreadsheet tab name is undefined or empty'));
         }
 
         // Error synchronously created by calling functions will be
-        // treated as reject() call
+        // treated as reject() call, getSpreadsheetIdByName call throw
+        // an error
         const spreadsheetId = getSpreadsheetIdByName(spreadsheetName);
 
         const callApi = () => {
@@ -143,11 +180,11 @@ function getSpreadsheetTabData(spreadsheetName, tabName) {
 
         gapi.load('client:auth2', callApi);
     });
-}
+};
 
-/**************
- * API methods
- **************/
+/*********************
+ * API public methods
+ *********************/
 
 /**
  * Students
@@ -156,45 +193,46 @@ function getSpreadsheetTabData(spreadsheetName, tabName) {
 /**
  * Get list of students from Google spreadsheet 'Students' tab
  * @param {String} spreadsheetName - Name of Google spreadsheet to fetch data from
+ * @returns {Object}
  */
 export const getStudents = spreadsheetName =>
     getSpreadsheetTabData(spreadsheetName, tabs.students);
 
 /**
  * Get a Student from Google spreadsheet 'Students' tab by any of
- * student's ids (Key, Login, etc)
+ * that student Ids (Key, Login, etc.)
  * @param {String} spreadsheetName - Name of Google spreadsheet to fetch data from
- * @param {String} id - Student id value
- * @param {String} idName - Student id name
+ * @param {String} idName - Student Id name
+ * @param {String} idVal - Student Id value
  * @returns {Promise}
  */
-export function getStudent(spreadsheetName, id, idName) {
+export const getStudent = (spreadsheetName, idName, idVal) => {
     return new Promise((resolve, reject) => {
         if (!idName) {
             reject(new Error('Please provide your Id name'));
         }
 
-        if (!id) {
-            reject(new Error(`Please provide your ${idName} value`));
+        if (!idVal) {
+            reject(new Error(`Please provide your '${idName}'`));
         }
 
         getStudents(spreadsheetName)
             .then(result => {
-                const user = result.find(student =>
-                    student.get(idName).trim() === id.trim()
+                const student = result.find(s =>
+                    s.get(idName).trim() === idVal.trim()
                 );
 
-                if (user) {
-                    resolve(user);
+                if (student) {
+                    resolve(student);
                 } else {
-                    reject(new Error(`User with ${idName} "${id}" not found in the spreadsheet "${spreadsheetName}"`));
+                    reject(new Error(`Student with provided ${idName} wasn't found on the '${spreadsheetName}' spreadsheet`));
                 }
             })
             .catch(
                 error => reject(error)
             );
     });
-}
+};
 
 /**
  * Get Student from Google spreadsheet 'Students' tab by 'Key' id
@@ -202,7 +240,7 @@ export function getStudent(spreadsheetName, id, idName) {
  * @param {String} key - student Key id value
  */
 export const getStudentByKey = (spreadsheetName, key) =>
-    getStudent(spreadsheetName, key, 'key');
+    getStudent(spreadsheetName, 'key', key);
 
 /**
  * Reviews
@@ -251,7 +289,7 @@ Lesson
 export const getLessons = (spreadsheetName, studentLogin) => {
     return new Promise((resolve, reject) => {
         if (!studentLogin) {
-            reject(new Error("Please provide student's login to get lessons for the student"));
+            reject(new Error("Student's login wasn't provided, can't get lessons for the student"));
         }
 
         const lcStudentLogin = studentLogin.toLowerCase();

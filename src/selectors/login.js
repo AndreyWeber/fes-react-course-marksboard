@@ -1,5 +1,8 @@
 import { createSelector } from 'reselect';
 
+/**
+ * Public selectors
+ */
 export const getLogin = state => state.get('login');
 
 export const isLoggedIn = createSelector(
