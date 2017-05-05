@@ -1,6 +1,7 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { replace } from 'react-router-redux';
+import PropTypes from 'prop-types';
 
 import { isLoggedIn } from '../selectors/login';
 import { getPathname, getQuery } from '../selectors/routing';

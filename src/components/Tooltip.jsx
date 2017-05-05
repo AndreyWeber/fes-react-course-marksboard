@@ -1,9 +1,10 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import { OverlayTrigger, Tooltip as BootstrapTooltip } from 'react-bootstrap';
 
-const Tooltip = ({children, position, text}) => {
-    return position === 'none'
+const Tooltip = ({children, position, text}) => (
+    position === 'none'
         ? children
         : (
             <OverlayTrigger
@@ -18,8 +19,8 @@ const Tooltip = ({children, position, text}) => {
             >
                 {children}
             </OverlayTrigger>
-        );
-};
+        )
+);
 
 Tooltip.propTypes = {
     children: PropTypes.node.isRequired,

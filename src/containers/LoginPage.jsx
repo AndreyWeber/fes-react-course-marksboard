@@ -1,6 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { replace } from 'react-router-redux';
+import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import { userLogin } from '../actions';
