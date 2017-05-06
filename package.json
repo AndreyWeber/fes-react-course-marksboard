@@ -61,7 +61,7 @@
     "postcss-modules": "^0.6.4",
     "react-hot-loader": "^3.0.0-beta.6",
     "style-loader": "^0.16.1",
-    "webpack": "^2.4.1",
+    "webpack": "fulls1z3/webpack#v2.1.0-beta.27-harmony",
     "webpack-dev-server": "^2.4.5"
   }
 }
