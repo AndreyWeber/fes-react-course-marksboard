@@ -1,20 +1,25 @@
 import { createSelector } from 'reselect';
 
+import { getUserLogin } from './user';
+
 /**
 * Helper methods
 **/
-const getReviews = state => state.get('reviews');
-
-const getReviewItems = createSelector(
-    getReviews,
-    reviews => reviews.get('items')
-);
-
 const marksSum = reviews => (reviews
         .reduce((score, item) =>
             score + parseFloat(item.get('mark', 0)),
             0
         )
+);
+
+/**
+ * Private selectors
+ */
+const getReviews = state => state.get('reviews');
+
+const getReviewItems = createSelector(
+    getReviews,
+    reviews => reviews.get('items')
 );
 
 const getStudentRatingsTable = state => (
@@ -26,24 +31,28 @@ const getStudentRatingsTable = state => (
 );
 
 /**
-* Public methods
+* Public selectors
 **/
 export const isReviewsFetching = createSelector(
     getReviews,
     reviews => reviews.get('isFetching')
 );
 
-export const getStudentTotalScore = (state, login) => (
-    getStudentRatingsTable(state)
-        .get(login, 0)
+export const getStudentTotalScore = createSelector(
+    getUserLogin,
+    getStudentRatingsTable,
+    (login, ratingsTable) => ratingsTable.get(login, 0)
 );
 
-export const getStudentRating = (state, login) => {
-    const ratingsTable = getStudentRatingsTable(state);
-    const indexInRatingsTable = ratingsTable.keySeq().keyOf(login);
+export const getStudentRating = createSelector(
+    getUserLogin,
+    getStudentRatingsTable,
+    (login, ratingsTable) => {
+        const indexInRatingsTable = ratingsTable.keySeq().keyOf(login);
 
-    return {
-        competitorsCount:   ratingsTable.count(),
-        value:              indexInRatingsTable + 1 || 0
-    };
-};
+        return {
+            competitorsCount:   ratingsTable.count(),
+            value:              (indexInRatingsTable + 1) || 0
+        };
+    }
+);

@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
     Button,
     FormControl,
@@ -13,6 +14,7 @@ const ENTER_KEY = 13;
 export default class Login extends Component {
     static propTypes = {
         error: PropTypes.string,
+        spreadsheetName: PropTypes.string,
         onLogin: PropTypes.func.isRequired
     };
 
@@ -31,13 +33,23 @@ export default class Login extends Component {
     };
 
     handleKeyDownOnLoginInput = event => {
+        const {
+            spreadsheetName,
+            onLogin
+        } = this.props;
+
         if (event.keyCode === ENTER_KEY) {
-            this.props.onLogin(this.state.login);
+            onLogin(spreadsheetName, this.state.login);
         }
     };
 
     handleLogin = () => {
-        this.props.onLogin(this.state.login);
+        const {
+            spreadsheetName,
+            onLogin
+        } = this.props;
+
+        onLogin(spreadsheetName, this.state.login);
     };
 
     render() {
@@ -45,30 +57,29 @@ export default class Login extends Component {
 
         return (
             <div className={styles.loginRoot}>
-                <div className={styles.loginContainer}>
-                    <FormGroup
-                        bsSize="large"
-                        className={styles.loginFormGroup}
-                        controlId="formLogin"
+                <FormGroup
+                    bsSize="large"
+                    className={styles.loginFormGroup}
+                    controlId="formLogin"
+                >
+                    <HelpBlock className={styles.loginHelpBlock}>
+                        {error}
+                    </HelpBlock>
+                    <FormControl
+                        className={styles.loginKeyInput}
+                        placeholder="Please provide your key to start... :)"
+                        type="text"
+                        onChange={this.handleLoginChange}
+                        onKeyDown={this.handleKeyDownOnLoginInput}
+                    />
+                    <Button
+                        bsStyle="danger"
+                        className={styles.loginButton}
+                        onClick={this.handleLogin}
                     >
-                        <HelpBlock className={styles.loginHelpBlock}>
-                            {error}
-                        </HelpBlock>
-                        <FormControl
-                            placeholder="Please provide your key to start... :)"
-                            type="text"
-                            onChange={this.handleLoginChange}
-                            onKeyDown={this.handleKeyDownOnLoginInput}
-                        />
-                        <Button
-                            bsStyle="danger"
-                            className={styles.loginButton}
-                            onClick={this.handleLogin}
-                        >
-                            Take off!
-                        </Button>
-                    </FormGroup>
-                </div>
+                        Take off!
+                    </Button>
+                </FormGroup>
             </div>
         );
     }

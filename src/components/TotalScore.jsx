@@ -1,25 +1,31 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { appendSuffix } from 'nth';
 
 import { randomGreeting } from '../utils/randomGreeting';
 
 import styles from './TotalScore.less';
 
-const TotalScore = props => {
-    return (
+const TotalScore =
+    ({
+         competitorsCount,
+         ratingValue,
+         showCongrats,
+         totalScore,
+         userName
+    }) => (
         <div className={styles.root}>
-            <div>{randomGreeting()}, <span className={styles.highlightedText}>{props.userName}!</span></div>
+            <div>{randomGreeting()}, <span className={styles.highlightedText}>{userName}!</span></div>
             <div>Your total score is:</div>
-            <div className={styles.totalScore}>{props.totalScore}</div>
+            <div className={styles.totalScore}>{totalScore}</div>
             {
-                props.showCongrats
+                showCongrats
                     ? <div className={styles.congratsMessage}>Congrats!</div>
                     : ''
             }
-            <div>You are {appendSuffix(props.ratingValue)} among {props.competitorsCount} cadets</div>
+            <div>You are {appendSuffix(ratingValue)} among {competitorsCount} cadets</div>
         </div>
     );
-};
 
 TotalScore.propTypes = {
     competitorsCount: PropTypes.number.isRequired,

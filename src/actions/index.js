@@ -1,4 +1,5 @@
-import { setCurrentUserKey } from '../utils/session';
+import { tryParseError } from '../utils/common';
+import { setCurrentUserKey, setCurrentSpreadsheetName } from '../utils/session';
 import {
     getReviews,
     getStudentByKey,
@@ -17,7 +18,7 @@ export const FETCH_LESSONS_REQUEST = 'FETCH_LESSONS_REQUEST';
 export const FETCH_LESSONS_SUCCESS = 'FETCH_LESSONS_SUCCESS';
 export const FETCH_LESSONS_FAILURE = 'FETCH_LESSONS_FAILURE';
 
-export const userLogin = (key, loginCallback = undefined) => dispatch => {
+export const userLogin = (spreadsheetName, key, loginCallback = undefined) => dispatch => {
     dispatch({
         type: USER_LOGIN_REQUEST
     });
@@ -27,8 +28,9 @@ export const userLogin = (key, loginCallback = undefined) => dispatch => {
             callback();
         }
     };
-    getStudentByKey(key)
+    getStudentByKey(spreadsheetName, key)
         .then(user => {
+            setCurrentSpreadsheetName(spreadsheetName);
             setCurrentUserKey(user.get('key'));
 
             dispatch({
@@ -42,41 +44,41 @@ export const userLogin = (key, loginCallback = undefined) => dispatch => {
             dispatch({
                 type: USER_LOGIN_FAILURE,
                 key,
-                error
+                error: tryParseError(error)
             });
 
             call(loginCallback);
         });
 };
 
-export const fetchReviews = () => dispatch => {
+export const fetchReviews = spreadsheetName => dispatch => {
     dispatch({
         type: FETCH_REVIEWS_REQUEST
     });
 
-    getReviews()
+    getReviews(spreadsheetName)
         .then(reviews => dispatch({
             type: FETCH_REVIEWS_SUCCESS,
             reviews
         }))
         .catch(error => dispatch({
             type: FETCH_REVIEWS_FAILURE,
-            error
+            error: tryParseError(error)
         }));
 };
 
-export const fetchLessons = studentLogin => dispatch => {
+export const fetchLessons = (spreadsheetName, studentLogin) => dispatch => {
     dispatch({
         type: FETCH_LESSONS_REQUEST
     });
 
-    getLessons(studentLogin)
+    getLessons(spreadsheetName, studentLogin)
         .then(lessons => dispatch({
             type: FETCH_LESSONS_SUCCESS,
             lessons
         }))
         .catch(error => dispatch({
             type: FETCH_LESSONS_FAILURE,
-            error
+            error: tryParseError(error)
         }));
 };

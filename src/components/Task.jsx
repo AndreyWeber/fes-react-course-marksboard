@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import ScoreProgressBar from './ScoreProgressBar.jsx';
 import PullRequestIcon from './PullRequestIcon.jsx';
@@ -9,7 +10,7 @@ import { progressBarColorMap } from '../constants';
 
 const NOT_FINISHED_MESSAGE = 'Not finished yet';
 const FINISHED_MESSAGE = 'Complete on ';
-const FINISHED_WITH_EXCELLENCE_MESSAGE = 'Excellent! Complete on ';
+const FINISHED_WITH_EXCELLENCE_MESSAGE = `Excellent! ${FINISHED_MESSAGE}`;
 
 const getProgressBarProps = percent => {
     if (percent === 0) {
@@ -38,7 +39,6 @@ const getProgressBarProps = percent => {
 
 const Task = props => {
     const completePercent = Math.floor((props.score * 100) / props.maxScore);
-
     const progressBarProps = getProgressBarProps(completePercent);
 
     return (

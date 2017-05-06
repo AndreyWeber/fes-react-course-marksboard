@@ -2,12 +2,12 @@ import { createSelector } from 'reselect';
 import { Map } from 'immutable';
 
 /**
- * Helper methods
+ * Private selectors
  **/
 const getLessons = state => state.get('lessons');
 
 /**
- * Public methods
+ * Public selectors
  **/
 export const getLessonItems = createSelector(
     getLessons,
@@ -35,7 +35,7 @@ export const getLessonItems = createSelector(
                     timestamp: task.getIn(['review', 'timestamp'], null),
                     score: parseInt(task.getIn(['review', 'mark'], 0)),
                     maxScore: parseInt(task.get('points', 0)),
-                    prUrl: task.getIn(['review', 'pr'], null)
+                    prUrl: task.getIn(['review', 'prUrl'], null)
                 }))
             });
         })
