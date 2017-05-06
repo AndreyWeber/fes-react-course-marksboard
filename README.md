@@ -7,7 +7,7 @@ Application demo can be found [here](https://andreyweber.github.io/fes-react-cou
 
 ## GitHub pages pre-deploy steps
 1. Change paths to images in the next *.less files:
-* <b>Login.less</b> file &ndash; background: url("https://[github_login].github.io/[repo_name]/static/img/login_bg.png") no-repeat;)
+* <b>Login.less</b> file &ndash; background: url("https://[github_login].github.io/[repo_name]/static/img/login_bg.png") no-repeat;
 * <b>TotalScore.less</b> file &ndash; url("https://[github_login].github.io/[repo_name]/static/img/main_bg.png") no-repeat @total-score-bg-color;
 * <b>Lessons.less</b> file &ndash; url("https://[github_login].github.io/[repo_name]/static/img/lessons_bg.png") no-repeat @default-bg-color;
 2. <b>index.html</b> file &ndash; add <i>https://[github_login].github.io/[repo_name]</i> prefix to the <b>bundle.js</b> and <b>config.js</b> files paths
