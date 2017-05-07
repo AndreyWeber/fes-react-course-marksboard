@@ -1,9 +1,9 @@
 # Project 'fes-react-course-marksboard'
 Marks board application for Front-end Science ReactJS course.
 
-## Demo version
+## Working application
 
-Application demo can be found [here](https://andreyweber.github.io/fes-react-course-marksboard-demo/#/totalscore?ssname=react2+hw)
+Working version of the application can be found [here](https://andreyweber.github.io/fes-react-course-marksboard-demo/#/totalscore?ssname=react2+hw)
 
 ## GitHub pages pre-deploy steps
 1. Change paths to images in the next *.less files:
@@ -19,8 +19,8 @@ url("https://[github_login].github.io/[repo_name]/static/img/main_bg.png") no-re
 ```css
 url("https://[github_login].github.io/[repo_name]/static/img/lessons_bg.png") no-repeat @default-bg-color;
 ```
-2. **index.html** file &ndash; add _https://[github_login].github.io/[repo_name]_ prefix to the paths inside **bundle.js** and **config.js** files
-3. **NavigationBar.jsx** component file &ndash; add ```_/[repo_name]/#/_``` to paths
+2. **index.html** file &ndash; add ```https://[github_login].github.io/[repo_name]``` prefix to the paths inside **bundle.js** and **config.js** files
+3. **NavigationBar.jsx** component file &ndash; add ```/[repo_name]/#/``` to paths
 4. **main.jsx** file &ndash; substitute _browserHistory_ with _hashHistory_
 
 ## Useful Links
