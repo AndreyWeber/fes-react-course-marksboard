@@ -12,6 +12,10 @@ Specific steps required to deploy application of GitHub pages:
 ```css
 background: url("https://[github_login].github.io/[repo_name]/static/img/login_bg.png") no-repeat;
 ```
+Example:
+```css
+background: url("https://andreyweber.github.io/fes-react-course-marksboard-demo/static/img/login_bg.png") no-repeat;
+```
 * **TotalScore.less** file:
 ```css
 url("https://[github_login].github.io/[repo_name]/static/img/main_bg.png") no-repeat @total-score-bg-color;
