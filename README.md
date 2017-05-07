@@ -7,12 +7,21 @@ Application demo can be found [here](https://andreyweber.github.io/fes-react-cou
 
 ## GitHub pages pre-deploy steps
 1. Change paths to images in the next *.less files:
-* **Login.less** file &ndash; background: url("https://[github_login].github.io/[repo_name]/static/img/login_bg.png") no-repeat;
-* <b>TotalScore.less</b> file &ndash; url("https://[github_login].github.io/[repo_name]/static/img/main_bg.png") no-repeat @total-score-bg-color;
-* <b>Lessons.less</b> file &ndash; url("https://[github_login].github.io/[repo_name]/static/img/lessons_bg.png") no-repeat @default-bg-color;
-2. <b>index.html</b> file &ndash; add <i>https://[github_login].github.io/[repo_name]</i> prefix to the <b>bundle.js</b> and <b>config.js</b> files paths
-3. <b>NavigationBar.jsx</b> component file &ndash; add <i>/[repo_name]/#/</i> to paths
-4. <b>main.jsx</b> file &ndash; substitute <i>browserHistory</i> with <i>hashHistory</i>
+* **Login.less** file:
+```css
+background: url("https://[github_login].github.io/[repo_name]/static/img/login_bg.png") no-repeat;
+```
+* **TotalScore.less** file:
+```css
+url("https://[github_login].github.io/[repo_name]/static/img/main_bg.png") no-repeat @total-score-bg-color;
+```
+* **Lessons.less** file:
+```css
+url("https://[github_login].github.io/[repo_name]/static/img/lessons_bg.png") no-repeat @default-bg-color;
+```
+2. **index.html** file &ndash; add _https://[github_login].github.io/[repo_name]_ prefix to the paths inside **bundle.js** and **config.js** files
+3. **NavigationBar.jsx** component file &ndash; add ```/[repo_name]/#/``` to paths
+4. **main.jsx** file &ndash; substitute _browserHistory_ with _hashHistory_
 
 ## Useful Links
 1. [Google API Client Libraries > JavaScript (Beta)](https://developers.google.com/api-client-library/javascript/start/start-js)
