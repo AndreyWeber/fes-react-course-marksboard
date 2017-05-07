@@ -6,6 +6,7 @@ Marks board application for Front-end Science ReactJS course.
 Working version of the application can be found [here](https://andreyweber.github.io/fes-react-course-marksboard-demo/#/totalscore?ssname=react2+hw)
 
 ## GitHub pages pre-deploy steps
+Specific steps required to deploy application of GitHub pages:
 1. Change paths to images in the next *.less files:
 * **Login.less** file:
 ```css
