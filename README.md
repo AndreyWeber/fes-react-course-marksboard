@@ -1,13 +1,19 @@
 # Project 'fes-react-course-marksboard'
 Marks board application for Front-end Science ReactJS course.
 
-## Working application
+## Working application version
 
 Working version of the application can be found [here](https://andreyweber.github.io/fes-react-course-marksboard-demo/#/totalscore?ssname=react2+hw)
 
+## Application configuration and URL-parameters
+### Multi-spreadsheets support
+Application supports referring multiple Google spreadsheets of predefined structure. To refer particular Google spreadsheet from application:
+1. It should be added to the application configuration file (see section below) [Useful Links](#useful-links)
+2. Spreadsheet name should be provided as URL-parameter
+
 ## GitHub pages pre-deploy steps
 Specific steps required to deploy application of GitHub pages:
-1. Change paths to images in the next *.less files:
+1. Change paths to images in the next ***.less** files:
 * **Login.less** file:
 ```css
 background: url("https://[github_login].github.io/[repo_name]/static/img/login_bg.png") no-repeat;
@@ -24,8 +30,8 @@ url("https://[github_login].github.io/[repo_name]/static/img/main_bg.png") no-re
 ```css
 url("https://[github_login].github.io/[repo_name]/static/img/lessons_bg.png") no-repeat @default-bg-color;
 ```
-2. **index.html** file &ndash; add ```https://[github_login].github.io/[repo_name]``` prefix to the paths inside **bundle.js** and **config.js** files
-3. **NavigationBar.jsx** component file &ndash; add ```/[repo_name]/#/``` to paths
+2. **index.html** file &ndash; add `https://[github_login].github.io/[repo_name]` prefix to the paths inside **bundle.js** and **config.js** files
+3. **NavigationBar.jsx** component file &ndash; add `/[repo_name]/#/` to paths
 4. **main.jsx** file &ndash; substitute _browserHistory_ with _hashHistory_
 
 ## Useful Links
