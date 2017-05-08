@@ -8,7 +8,7 @@ Working version of the application can be found [here](https://andreyweber.githu
 Application supports referring multiple Google spreadsheet markboards of the same predefined structure. It means that students of a particular Front-end Science ReactJS course thread can refer to their own Google spreadsheet marksboard via single application instance.
 To refer particular Google spreadsheet from the application:
 1. It should be added to the application [configuration file](#application-configuration-file)
-2. Its name should be provided as [URL-parameter](#application-url-parameter(s))
+2. Its name should be provided as [URL-parameter](#application-url-parameter)
 
 ### Application configuration file
 
