@@ -2,14 +2,17 @@
 Marks board application for Front-end Science ReactJS course.
 
 ## Working application version
-
 Working version of the application can be found [here](https://andreyweber.github.io/fes-react-course-marksboard-demo/#/totalscore?ssname=react2+hw)
 
-## Application configuration and URL-parameters
-### Multi-spreadsheets support
-Application supports referring multiple Google spreadsheets of predefined structure. To refer particular Google spreadsheet from application:
-1. It should be added to the application configuration file (see section below) [Useful Links](#useful-links)
-2. Spreadsheet name should be provided as URL-parameter
+## Multi-spreadsheets support
+Application supports referring multiple Google spreadsheet markboards of the same predefined structure. It means that students of a particular Front-end Science ReactJS course thread can refer to their own Google spreadsheet marksboard via single application instance.
+To refer particular Google spreadsheet from the application:
+1. It should be added to the application [configuration file](#application-configuration-file)
+2. Its name should be provided as [URL-parameter](application-url-parameter(s))
+
+### Application configuration file
+
+### Application URL-parameter(s)
 
 ## GitHub pages pre-deploy steps
 Specific steps required to deploy application of GitHub pages:
