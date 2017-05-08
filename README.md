@@ -12,7 +12,7 @@ To refer particular Google spreadsheet from the application:
 
 ### Application configuration file
 
-### Application URL-parameter(s)
+### Application URL-parameter
 
 ## GitHub pages pre-deploy steps
 Specific steps required to deploy application of GitHub pages:
