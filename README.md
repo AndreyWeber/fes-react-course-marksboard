@@ -65,7 +65,7 @@ url("https://[github_login].github.io/[repo_name]/static/img/main_bg.png") no-re
 ```css
 url("https://[github_login].github.io/[repo_name]/static/img/lessons_bg.png") no-repeat @default-bg-color;
 ```
-2. **index.html** file &ndash; add `https://[github_login].github.io/[repo_name]` prefix to the paths inside **bundle.js** and **config.js** files
+2. **index.html** file &ndash; add `https://[github_login].github.io/[repo_name]` prefix to the **bundle.js**, **config.js** and **favicon.png** paths
 3. **NavigationBar.jsx** component file &ndash; add `/[repo_name]/#/` to paths
 4. **main.jsx** file &ndash; substitute _browserHistory_ with _hashHistory_
 
